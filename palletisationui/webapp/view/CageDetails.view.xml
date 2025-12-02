@@ -1,0 +1,172 @@
+<mvc:View
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:l="sap.ui.layout"
+    xmlns:grid="sap.ui.layout.cssgrid"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    controllerName="com.sysco.wm.palletisationui.controller.CageDetails"
+>
+    <Page
+        title="{i18n>title}"
+        showHeader="false"
+    >
+        <VBox class="twoRemPadding">
+            <VBox
+                alignItems="Start"
+                alignContent="Start"
+            >
+               
+            </VBox>
+            <HBox>
+                <VBox width="70%">
+                 <Title
+                    id="cageTitle"
+                    text=""
+                />
+
+                <Button
+                    text="{i18n>skip}"
+                    class="blackButton roundCorner"
+                    visible="false"
+                />
+                <ObjectStatus
+                    state="Success"
+                    text="{i18n>open}"
+                    class=""
+                />
+                <Label
+                    id="LabelRoute"
+                    text=""
+                />
+                    <Table
+                        id="cageTable"
+                        items="{
+                            path: 'flattened>/visibleResults'
+                        }"
+                        inset="false"
+                        mode="None"
+                    >
+                        <columns>
+                            <Column>
+                                <Text text="{i18n>cage_id}" />
+                            </Column>
+                            <Column>
+                                <Text text="{i18n>material}" />
+                            </Column>
+                            <Column>
+                                <Text text="{i18n>total_quantity}" />
+                            </Column>
+                            <Column>
+                                <Text text="{i18n>unit_code}" />
+                            </Column>
+                            <Column>
+                                <Text text="{i18n>position}" />
+                            </Column>
+                            <Column>
+                                <Text text="{i18n>status}" />
+                            </Column>
+                        </columns>
+
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text text="{flattened>CageID}" />
+                                    <Text text="{flattened>Material}" />
+                                    <Text text="{flattened>TotalQuantity}" />
+                                    <Text text="{flattened>Uom_UnitCode}" />
+                                    <Text text="{flattened>PositionInCage}" />
+                                    <ObjectStatus
+                                        state="{flattened>Status}"
+                                        icon="sap-icon://circle-task-2"
+                                    />
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+
+                    <HBox justifyContent="Center">
+                        <!-- Up Arrow -->
+                        <Button
+                            id="btnUp"
+                            icon="sap-icon://navigation-up-arrow"
+                            type="Transparent"
+                            press=".onShowLess"
+                            visible="false"
+                        />
+                        <!-- hidden initially -->
+
+                        <!-- Down Arrow -->
+                        <Button
+                            id="btnDown"
+                            icon="sap-icon://navigation-down-arrow"
+                            type="Transparent"
+                            press=".onShowMore"
+                        />
+                    </HBox>
+                </VBox>
+                <VBox width="30%">
+                    <items>
+                        <grid:CSSGrid
+                            id="grid1"
+                            gridTemplateColumns="40px 200px 0px"
+                            gridTemplateRows="25px 200px 35px"
+                        >
+                            <Title
+                                text=""
+                                id="cageIdOnBox"
+                                class=""
+                            >
+                                <layoutData>
+                                    <grid:GridItemLayoutData
+                                        gridColumn="2 / 4"
+                                    />
+                                </layoutData>
+                            </Title>
+                            <Button type="Transparent"
+                                class=""
+                                enabled="false"
+                            />
+                            <Table
+                                id="table0"
+                                backgroundDesign="Solid"
+                                fixedLayout="true"
+                                showSeparators="Inner"
+                                class="customBorderSpacing"
+                                inset="false"
+                            />
+
+                            <Button type="Transparent"
+                                class=""
+                                enabled="true"
+                            />
+                            <Text
+                                text=""
+                                id='dropValue'
+                                class='paddingGrid'
+                            >
+                                <layoutData>
+                                    <grid:GridItemLayoutData
+                                        gridColumn="2 / 4"
+                                    />
+                                </layoutData>
+                            </Text>
+                            <Button
+                                text="{i18n>confirm_next}"
+                                type="Transparent"
+                                class="roundCorner blackButton largeWidth"
+                                press="onConfirm"
+                            >
+                                <layoutData>
+                                    <grid:GridItemLayoutData
+                                        gridColumn="2 / 4"
+                                    />
+                                </layoutData>
+                            </Button>
+                        </grid:CSSGrid>
+                    </items>
+                </VBox>
+            </HBox>
+        </VBox>
+    </Page>
+</mvc:View>

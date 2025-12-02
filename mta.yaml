@@ -1,0 +1,93 @@
+_schema-version: "3.2"
+ID: Palletisation
+version: 0.0.1
+modules:
+- name: Palletisation-destination-content
+  type: com.sap.application.content
+  requires:
+  - name: Palletisation-destination-service
+    parameters:
+      content-target: true
+  - name: Palletisation_html_repo_host
+    parameters:
+      service-key:
+        name: Palletisation_html_repo_host-key
+  - name: uaa_Palletisation
+    parameters:
+      service-key:
+        name: uaa_Palletisation-key
+  parameters:
+    content:
+      instance:
+        destinations:
+        - Name: Palletisation_Palletisation_html_repo_host
+          ServiceInstanceName: Palletisation-html5-app-host-service
+          ServiceKeyName: Palletisation_html_repo_host-key
+          sap.cloud.service: Palletisation
+        - Authentication: OAuth2UserTokenExchange
+          Name: Palletisation_uaa_Palletisation
+          ServiceInstanceName: Palletisation-xsuaa-service
+          ServiceKeyName: uaa_Palletisation-key
+          sap.cloud.service: Palletisation
+        existing_destinations_policy: ignore
+  build-parameters:
+    no-source: true
+- name: Palletisation-app-content
+  type: com.sap.application.content
+  path: .
+  requires:
+  - name: Palletisation_html_repo_host
+    parameters:
+      content-target: true
+  build-parameters:
+    build-result: resources
+    requires:
+    - artifacts:
+      - comsyscowmpalletisationui.zip
+      name: comsyscowmpalletisationui
+      target-path: resources/
+- name: comsyscowmpalletisationui
+  type: html5
+  path: palletisationui
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+resources:
+- name: Palletisation-destination-service
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: true
+      init_data:
+        instance:
+          destinations:
+          - Authentication: NoAuthentication
+            Name: ui5
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://ui5.sap.com
+          existing_destinations_policy: update
+      version: 1.0.0
+    service: destination
+    service-name: Palletisation-destination-service
+    service-plan: lite
+- name: Palletisation_html_repo_host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-name: Palletisation-html5-app-host-service
+    service-plan: app-host
+- name: uaa_Palletisation
+  type: org.cloudfoundry.managed-service
+  parameters:
+    path: ./xs-security.json
+    service: xsuaa
+    service-name: Palletisation-xsuaa-service
+    service-plan: application
+parameters:
+  deploy_mode: html5-repo
+  enable-parallel-deployments: true

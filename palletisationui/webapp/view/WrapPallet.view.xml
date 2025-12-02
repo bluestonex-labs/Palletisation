@@ -1,0 +1,21 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form" controllerName="com.sysco.wm.palletisationui.controller.WrapPallet">
+    <Page showHeader="false">
+        <HBox width="100vw" alignContent="Center" alignItems="Center" fitContainer="true" justifyContent="Center">
+            <VBox>
+                <f:SimpleForm editable="false" layout="ResponsiveGridLayout" labelSpanXL="3" labelSpanL="3" labelSpanM="3" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="4" emptySpanL="4" emptySpanM="4" emptySpanS="0" columnsXL="1" columnsL="1" columnsM="1" singleContainerFullSize="true">
+                    <f:content>
+                        <VBox alignContent="Center" alignItems="Center" fitContainer="true" justifyContent="Center" class="sapUiResponsiveContentPadding">
+                            <Title text="{i18n>pallet_lbl_print}" class="sapUiTinyMargin"/>
+                            <Label id="palletId" text="" class="sapUiTinyMargin"/>
+                            <Label text="{i18n>pallet_wrap}" class="sapUiTinyMargin"/>
+                            <HBox alignContent="Center" alignItems="Center" justifyContent="Center" fitContainer="true" class="sapUiTinyMargin">
+                                <Button icon="sap-icon://accept" width="100px" class="roundCorner blackButton sapUiTinyMargin" type="Emphasized" press="PrintConfirmLabel"/>
+                                <Button icon="sap-icon://decline" width="100px" class="roundCorner blackButton sapUiTinyMargin" type="Emphasized" press="gotoRequestJob"/>
+                            </HBox>
+                        </VBox>
+                    </f:content>
+                </f:SimpleForm>
+            </VBox>
+        </HBox>
+    </Page>
+</mvc:View>

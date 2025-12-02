@@ -1,0 +1,70 @@
+/* Enter your custom styles here */
+.largeWidth {
+    width: 200px !important;
+}
+.blackButton .sapMBtnInner {
+    color: #ffffff !important;
+    background-color: black !important;
+    background: black !important;
+    border-color: black !important;  
+}
+.greyButton .sapMBtnInner {
+    color: #ffffff !important;
+    background-color: grey !important;
+    background: grey !important;
+    border-color: grey !important;  
+}
+.roundCorner .sapMBtnInner{
+    border-radius: 2rem !important;
+}
+.borderless .sapMBtnInner{
+    background-color: transparent;
+    border: none;
+}
+.downArrowBlack .sapMBtnIcon {
+    color: black !important;
+    font-size: 1.375rem !important;
+}
+.customBeginMargin {
+    margin-left: 0.8rem !important;
+}
+.marginLeftToolbar {
+    margin-left: 0.4rem !important;
+}
+.cageVBoxMarginLeft {
+    margin-left: 65px !important;
+}
+.customMarginVBox {
+    margin-left: 100px !important;
+}
+.sapMListTblCell {
+    text-align: left !important;
+    vertical-align: top !important;
+}
+.customBorderSpacing .sapMListTbl {
+    border-spacing: 3px !important;
+}
+.paddingGrid {
+    padding-top: 0px !important;
+    padding-left: 10px !important;
+}
+.buttonTopPadding {
+    padding-top: 84px !important;
+}
+.sapMListTblHighlightCol+.sapMListTblHeaderCell,.sapMListTblHighlightCell+.sapMListTblCell {
+    padding-left: 0.4rem !important;
+}
+.greenCells{
+    background-color: lightgreen !important;
+}
+.redText .sapMLabel {
+    color: red;
+    font-size: 1rem !important
+}
+
+.sapMObjStatusNone .sapMObjStatusText {
+    color: transparent !important;
+}
+.twoRemPadding {
+    padding: 2rem;
+}

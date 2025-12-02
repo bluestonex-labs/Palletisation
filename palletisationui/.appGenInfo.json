@@ -1,0 +1,24 @@
+{
+  "generationParameters": {
+    "generationDate": "Mon Jul 21 2025 10:47:53 GMT+0000 (Coordinated Universal Time)",
+    "generatorPlatform": "SAP Business Application Studio",
+    "serviceType": "SAP System (ABAP On-Premise)",
+    "metadataFilename": "",
+    "serviceUrl": "http://f26.syscofrance.intra:1443/sap/opu/odata/sap/ZRF_GOODS_RECEIPT_NB_SRV",
+    "appName": "palletisationui",
+    "appTitle": "Palletisation",
+    "appDescription": "An SAP Fiori application.",
+    "appNamespace": "com.sysco.wm",
+    "ui5Theme": "sap_horizon",
+    "ui5Version": "1.138.0",
+    "enableCodeAssist": true,
+    "enableEslint": true,
+    "enableTypeScript": false,
+    "showMockDataInfo": true,
+    "generatorVersion": "1.18.3",
+    "template": "Basic V2",
+    "generatorName": "SAP Fiori Application Generator",
+    "entityRelatedConfig": [],
+    "launchText": "To launch the generated application, run the following from the generated application root folder:\n\n```\n    npm start\n```"
+  }
+}

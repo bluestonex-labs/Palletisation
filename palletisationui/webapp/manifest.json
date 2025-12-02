@@ -1,0 +1,194 @@
+{
+  "_version": "1.65.0",
+  "sap.app": {
+    "id": "com.sysco.wm.palletisationui",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "applicationVersion": {
+      "version": "0.0.1"
+    },
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "resources": "resources.json",
+    "sourceTemplate": {
+      "id": "@sap/generator-fiori:basic",
+      "version": "1.18.3",
+      "toolsId": "68587395-b057-43d4-8bc7-3fe8033a099e"
+    },
+    "dataSources": {
+      "mainService": {
+        "uri": "../palletiseservices/Pick",
+        "type": "OData",
+        "settings": {
+          "annotations": [],
+          "odataVersion": "2.0"
+        }
+      },
+      "plantService": {
+        "uri": "../palletiseservices/PickgetPlantListForUser",
+        "type": "OData",
+        "settings": {
+          "annotations": [],
+          "odataVersion": "2.0"
+        }
+      }
+    },
+    "crossNavigation": {
+      "inbounds": {
+        "palletisation-execute": {
+          "semanticObject": "palletisation",
+          "action": "execute",
+          "title": "{{palletisation-execute.flpTitle}}",
+          "icon": "sap-icon://BusinessSuiteInAppSymbols/icon-packing-work-center",
+          "signature": {
+            "parameters": {},
+            "additionalParameters": "allowed"
+          }
+        }
+      }
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "icons": {
+      "icon": "",
+      "favIcon": "",
+      "phone": "",
+      "phone@2": "",
+      "tablet": "",
+      "tablet@2": ""
+    },
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "flexEnabled": false,
+    "dependencies": {
+      "minUI5Version": "1.138.0",
+      "libs": {
+        "sap.m": {},
+        "sap.ui.core": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "com.sysco.wm.palletisationui.i18n.i18n"
+        }
+      },
+      "": {
+        "dataSource": "mainService",
+        "preload": true,
+        "settings": {}
+      }
+    },
+    "resources": {
+      "css": [
+        {
+          "uri": "css/style.css"
+        }
+      ]
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "controlAggregation": "pages",
+        "controlId": "app",
+        "transition": "slide",
+        "type": "View",
+        "viewType": "XML",
+        "path": "com.sysco.wm.palletisationui.view",
+        "async": true,
+        "viewPath": "com.sysco.wm.palletisationui.view"
+      },
+      "routes": [
+        {
+          "name": "Home",
+          "pattern": "",
+          "target": [
+            "TargetHome"
+          ]
+        },
+        {
+          "name": "StationList",
+          "pattern": "StationList",
+          "target": [
+            "TargetStationList"
+          ]
+        },
+        {
+          "name": "RouteInfo",
+          "pattern": "RouteInfo",
+          "target": [
+            "TargetRouteInfo"
+          ]
+        },
+        {
+          "name": "CageDetails",
+          "pattern": "CageDetails",
+          "target": [
+            "TargetCageDetails"
+          ]
+        },
+        {
+          "name": "LabelPrint",
+          "pattern": "LabelPrint",
+          "target": [
+            "TargetLabelPrint"
+          ]
+        },
+        {
+          "name": "WrapPallet",
+          "pattern": "WrapPallet",
+          "target": [
+            "TargetWrapPallet"
+          ]
+        }
+      ],
+      "targets": {
+        "TargetHome": {
+          "id": "Home",
+          "name": "Home"
+        },
+        "TargetStationList": {
+          "id": "StationList",
+          "name": "StationList"
+        },
+        "TargetRouteInfo": {
+          "id": "RouteInfo",
+          "name": "RouteInfo"
+        },
+        "TargetCageDetails": {
+          "id": "CageDetails",
+          "name": "CageDetails"
+        },
+        "TargetLabelPrint": {
+          "id": "LabelPrint",
+          "name": "LabelPrint"
+        },
+        "TargetWrapPallet": {
+          "id": "WrapPallet",
+          "name": "WrapPallet"
+        }
+      }
+    },
+    "rootView": {
+      "viewName": "com.sysco.wm.palletisationui.view.App",
+      "type": "XML",
+      "id": "App",
+      "async": true
+    }
+  },
+  "sap.cloud": {
+    "public": true,
+    "service": "Palletisation"
+  }
+}

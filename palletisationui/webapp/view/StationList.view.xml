@@ -1,0 +1,41 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form" xmlns:core="sap.ui.core" controllerName="com.sysco.wm.palletisationui.controller.StationList">
+    <Page title="{i18n>title}" showHeader="false">
+        <HBox id="hbStationList" width="100vw" fitContainer="true" visible="true">
+            <!-- <VBox width="50vw" height="100%" alignItems="Center" alignContent="Center" justifyContent="Center" class="borderRight" fitContainer="true">
+                <Button id="btnB1" class="blackButton largeWidth roundCorner" text="Station 1" icon="sap-icon://add" iconFirst="false" press="onRequestJob" enabled="false"/>
+                <Button id="btnB2" class="blackButton largeWidth roundCorner" text="Station 2" icon="sap-icon://add" iconFirst="false" press="onRequestJob" enabled="false"/>
+                <Button id="btnB3" class="blackButton largeWidth roundCorner" text="Station 3" icon="sap-icon://e-care" iconFirst="false" press="onRequestJob" enabled="false"/>
+                <Button id="btnB4" class="blackButton largeWidth roundCorner" text="Station 4" icon="sap-icon://e-care" iconFirst="false" press="onRequestJob" enabled="false"/>
+                <Button id="btnB5" class="roundCorner borderless downArrowBlack" icon="sap-icon://navigation-down-arrow" iconFirst="false" enabled="true"/>
+            </VBox> -->
+
+            <VBox id="stationListButtonsBox"  width="50vw" height="100%" alignItems="Center" alignContent="Center" justifyContent="Center" class="borderRight" fitContainer="true">
+                <!-- <HBox id="alignBox" justifyContent="Center">
+                    <Button
+                        id="prevBtnStn"
+                        class="roundCorner borderless upArrowBlack"
+                        icon="sap-icon://navigation-up-arrow"
+                        iconFirst="false"
+                        press=".onPrevPage"
+                        visible="false"
+                    />
+                    <Button
+                        id="nextBtnStn"
+                        class="roundCorner borderless downArrowBlack"
+                        icon="sap-icon://navigation-down-arrow"
+                        iconFirst="false"
+                        press=".onNextPage"
+                    /> 
+                </HBox>-->
+            </VBox>
+            <VBox width="50vw" height="100%" alignItems="Center" alignContent="Center" justifyContent="Center" class="borderLeft" fitContainer="true">
+                <VBox alignItems="Start">
+                    <items>
+                        <Button text="{i18n>open}" id="btnOpen" class="blackButton largeWidth roundCorner" press="onOpenPress" enabled="{= ${selectedRecord>/Status_ID} === 'CLOSE'  }" visible="true"/>
+                        <Button text="{i18n>close}" id="btnClose" class="blackButton largeWidth roundCorner" press="onOpenPress" enabled="{= ${selectedRecord>/Status_ID} === 'OPEN'  }" visible="true"/>
+                    </items>
+                </VBox>
+            </VBox>
+        </HBox> 
+    </Page>
+</mvc:View>

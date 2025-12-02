@@ -1,0 +1,68 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:ndc="sap.ndc" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form" xmlns:core="sap.ui.core" xmlns:si="sap.suite.ui.commons.statusindicator" controllerName="com.sysco.wm.palletisationui.controller.RouteInfo">
+    <Page title="{i18n>title}" showHeader="false">
+        <HBox width="100vw" fitContainer="true" visible="true">
+            <VBox width="50vw" height="100%" alignItems="Center" alignContent="Center" justifyContent="Center" class="borderRight">
+                <VBox width="62%" alignContent="Start" alignItems="Start" class="sapUiTinyMargin" fitContainer="true">
+                    <Toolbar design="Transparent" style="Clear" width="100%" class="marginLeftToolbar">
+                        <Title id ="titleRoute" text=""/>
+                        <ToolbarSpacer width="3rem"/>
+                        <Button id="btnSkip" text="{i18n>skip}" class="blackButton roundCorner" press="onSkipPress"/>
+                    </Toolbar>
+                    <ObjectStatus state="Success" text="{i18n>open}" class="customBeginMargin"/>
+                </VBox>
+                <HBox width="54%" alignContent="Center" alignItems="Center">
+                    <Label id="lbRoute" text="{i18n>route} : {routeData>/key}" />
+                </HBox>
+            <List items="{routeData>/items}">
+    <CustomListItem>
+        <HBox width="100%" fitContainer="true" justifyContent="Center" alignItems="Center" alignContent="Center">
+            <Label text="{i18n>cage_id}:" class="sapUiTinyMargin"/>
+            <Label text="{routeData>CAGEID}" class="sapUiTinyMargin"/>
+            
+            <!-- Status icons depending on your data -->
+            <ObjectStatus class="sapUiTinyMargin"
+                          state="Information"
+                          icon="sap-icon://add"/>
+            
+            <ObjectStatus class="sapUiTinyMargin"
+                          state="{routeData>STATUS}"
+                          icon="sap-icon://circle-task-2"/>
+        </HBox>
+    </CustomListItem>
+</List>
+
+                <HBox justifyContent="Center">
+                    <Button
+                        id="prevBtn1"
+                        class="roundCorner borderless upArrowBlack"
+                        icon="sap-icon://navigation-up-arrow"
+                        iconFirst="false"
+                        press=".onPrevPage"
+                        visible="false"
+                    />
+                    <Button
+                        id="nextBtn1"
+                        class="roundCorner borderless downArrowBlack"
+                        icon="sap-icon://navigation-down-arrow"
+                        iconFirst="false"
+                        press=".onNextPage"
+                    />
+                </HBox>
+            </VBox>
+            <VBox id="vbScanCage" width="50vw" height="100%" alignItems="Center" alignContent="Center" justifyContent="Center" class="borderLeft" visible="true">
+                <VBox alignItems="Center" justifyContent="Center" alignContent="Center">
+                    <items>
+                        <!--<  <Label id="lbScan" text="{i18n>scan_id}: 12343"/> -->
+                        <HBox class="sapUiTinyMarginTop">
+                            <Input id="inCageID" class="largeWidth" placeholder="{i18n>enter_id}" change="onCageIDInput"/>
+                            <ndc:BarcodeScannerButton disableBarcodeInputDialog="false" scanSuccess="onScanSuccess" scanFail="onScanFail" inputLiveUpdate="onScanLiveUpdate"/>
+                        </HBox>
+                        <!--<VBox alignContent="Center" alignItems="Center" justifyContent="Center" width="100%">-->
+                            <Button id= "palletizeBtn" text="{i18n>palletize}" class="blackButton largeWidth roundCorner" enabled="false" press="onPalletise"/>
+                        <!--</VBox>-->
+                    </items>
+                </VBox>
+            </VBox>
+        </HBox>
+    </Page>
+</mvc:View>
