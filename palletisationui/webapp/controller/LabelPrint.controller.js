@@ -542,15 +542,17 @@ sap.ui.define([
                     },
                     success: function (data) {
                         resolve(data.value.pickTaskID);
-
+                        console.log("Create pallet call result:" + data.value.pickTaskID);
                     },
                     error: function (error) {
                         reject(error);
+                        console.log(error);
                     }
 
                 });
             });
         },
+
         _callPrintLabel: function (resultA) {
             return new Promise((resolve, reject) => {
                 var sDest1 = "/palletiseservices";
@@ -567,9 +569,11 @@ sap.ui.define([
                     },
                     success: function (data) {
                         resolve(data);
+                        console.log("Print service success result:" + data);
                     },
                     error: function (error) {
                         reject(error);
+                        console.log(error);
                     }
                 });
             });

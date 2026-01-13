@@ -1,9 +1,10 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
+    "sap/ui/model/json/JSONModel",
     "sap/m/MessageBox",
     "sap/ndc/BarcodeScanner",
     "sap/m/MessageToast"
-], (Controller, MessageBox,BarcodeScanner,MessageToast) => {
+], (Controller, JSONModel, MessageBox, BarcodeScanner, MessageToast) => {
     "use strict";
 
     return Controller.extend("com.sysco.wm.palletisationui.controller.RouteInfo", {
@@ -24,7 +25,7 @@ sap.ui.define([
             var aSelectedRecord = this.getOwnerComponent().getModel("selectedRecord").getData();
             this.getView().byId("titleRoute").setText(aSelectedRecord.Description);
             this.getTaskId();
-           
+
             //this.getCageDetails();
 
 
@@ -124,15 +125,14 @@ sap.ui.define([
 
             this.loadRouteByIndex(this._currentRouteIndex);
             this.count = 0;
-
-
-
         },
 
         loadRouteByIndex: function (iIndex) {
             var that = this;
             var sKey = this._allRoutes[iIndex];
             var aData = this._routeData && this._routeData[sKey] ? this._routeData[sKey] : [];
+            var currentRouteCages = new JSONModel(aData);
+            this.getOwnerComponent().setModel(currentRouteCages, "currentRouteCages");
             this.getView().byId("inCageID").setValue("");
             this.getView().byId("palletizeBtn").setEnabled(false);
 
@@ -182,7 +182,7 @@ sap.ui.define([
                 this.getView().byId("inCageID").setValueState("None");
                 that.count = 0;
             } else {
-                sap.m.MessageBox.show(that.oBundle.getText("no_routes"));
+                MessageBox.show(that.oBundle.getText("no_routes"));
             }
         },
 
@@ -204,7 +204,7 @@ sap.ui.define([
             });
             this.getView().byId("inCageID").setValueState("None");
             if (val.length == 0 && cageID != "") {
-                sap.m.MessageBox.error(that.oBundle.getText("enter_correct_cage"));
+                MessageBox.error(that.oBundle.getText("enter_correct_cage"));
                 this.getView().byId("inCageID").setValueState("Error");
                 return;
             }
@@ -263,15 +263,18 @@ sap.ui.define([
         getCageDetails: async function () {
             return new Promise((resolve, reject) => {
                 var that = this;
-                 var sDest = "/palletiseservices";
+                var sDest = "/palletiseservices";
                 var sUrl = this.appModulePath + sDest + "/Palletise/getCagesDetailToPalletise";
                 var oLocale = sap.ui.getCore().getConfiguration().getLocale();
                 var lang = oLocale.language;
+                var taskIDs = [];
+                for (var i=0; i < this.getOwnerComponent().getModel("currentRouteCages").getData().length; i++) {
+                    taskIDs.push(this.getOwnerComponent().getModel("currentRouteCages").getData()[i].TASKID)
+                }
                 var oPayload = {
-                    "TaskIDs": [
-                        this.getView().getModel("routeData").getData().items[0].TASKID
-                    ]
+                    "TaskIDs": taskIDs
                 };
+                
                 $.ajax({
                     url: sUrl,
                     beforeSend: function (xhr) { xhr.setRequestHeader('Accept-Language', lang); },
@@ -301,10 +304,10 @@ sap.ui.define([
             BarcodeScanner.scan(
                 function (mResult) {  // success callback
                     this.byId("inBarcode").setValue(mResult.text);
-                    sap.m.MessageBox.show("Scanned: " + mResult.text);
+                    MessageBox.show("Scanned: " + mResult.text);
                 }.bind(this),
                 function (Error) {    // error callback
-                    sap.m.MessageBox.show("Scan failed: " + Error);
+                    MessageBox.show("Scan failed: " + Error);
                 },
                 function (mParams) {  // live update (optional)
                     console.log("Live update:", mParams);
@@ -313,11 +316,11 @@ sap.ui.define([
         },
 
         onScanSuccess: function (oEvent) {
-           var oBundle = this.getView().getModel("i18n").getResourceBundle();
+            var oBundle = this.getView().getModel("i18n").getResourceBundle();
             var sText = oBundle.getText("scanCancelled");
 
             if (oEvent.getParameter("cancelled")) {
-                sap.m.MessageToast.show(sText, { duration: 1000 });
+                MessageToast.show(sText, { duration: 1000 });
             } else {
                 if (oEvent.getParameter("text")) {
                     var oInpCageFld = this.getView().byId("inCageID");
@@ -328,7 +331,7 @@ sap.ui.define([
         },
 
         onScanFail: function (oEvent) {
-            sap.m.MessageBox.show("Scan failed: " + oEvent.getParameter("message"));
+            MessageBox.show("Scan failed: " + oEvent.getParameter("message"));
         },
 
         onScanLiveUpdate: function (oEvent) {

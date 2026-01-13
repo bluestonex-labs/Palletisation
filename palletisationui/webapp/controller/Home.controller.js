@@ -8,6 +8,7 @@ sap.ui.define([
     "use strict";
 
     return Controller.extend("com.sysco.wm.palletisationui.controller.Home", {
+
         onInit() {
 
             var appId = this.getOwnerComponent().getManifestEntry("/sap.app/id");
@@ -41,8 +42,6 @@ sap.ui.define([
 
         },
 
-
-
         onAfterRendering: function () {
             var printerModel = new sap.ui.model.json.JSONModel({
                 macAddress: "",
@@ -50,6 +49,7 @@ sap.ui.define([
             });
             sap.ui.getCore().setModel(printerModel, 'printerModel');
             this.onCheckForPrinter();
+            //sap.ui.getCore().getModel('printerModel').setProperty("/macAddress", "48:a4:93:aa:a0:fc");
         },
 
         onCheckForPrinter: function () {
@@ -79,9 +79,7 @@ sap.ui.define([
 
                             sap.ui.getCore().getModel('printerModel').setProperty("/macAddress", devices[i].PrinterID);
                             //exists = true;
-                        }
-
-                        else {
+                        } else {
                             // Access i18n properties
                             var oBundle = that.getView().getModel("i18n").getResourceBundle();
                             var sText_PNotConn = oBundle.getText("msgBox_eonCheckPrinter");

@@ -1,6 +1,7 @@
 sap.ui.define([
-    "sap/ui/core/mvc/Controller"
-], (Controller) => {
+    "sap/ui/core/mvc/Controller",
+    "sap/m/MessageBox"
+], (Controller, MessageBox) => {
     "use strict";
 
     return Controller.extend("com.sysco.wm.palletisationui.controller.CageDetails", {
@@ -26,7 +27,7 @@ sap.ui.define([
             // Suppose you already have your data model set
             var oModel = this.getOwnerComponent().getModel("cageDetails");
 
-            var value = {
+            /*var value = {
                 "items": {
                     "2345": [
                         {
@@ -235,10 +236,9 @@ sap.ui.define([
                     "MultiCubeMax": "1183.200",
                     "NoOfPosition": 9
                 }
-            };
+            };*/
 
-           // var oData = value;
-             var oData = oModel.getData().value;
+            var oData = oModel.getData().value;
             var aFlattenedData = [];
             var createPalletData = [];
 
@@ -256,7 +256,8 @@ sap.ui.define([
                             Uom_UnitCode: item.Uom_UnitCode,
                             PositionInCage: item.PositionInCage,
                             Status: "None",
-                            Drop:item.Drop
+                            Drop:item.Drop,
+                            IsPalletable:item.IsPalletable
                         });
                     });
 
@@ -269,8 +270,6 @@ sap.ui.define([
             this.getView().setModel(oFlatModel, "flattened");
             this._allData = aFlattenedData;
             this._updatePagedData();
-
-
         },
 
         _updatePagedData: function () {
@@ -346,6 +345,7 @@ sap.ui.define([
             }
             this._highlightCurrent();
         },
+
         _highlightCurrent: function () {
             // Remove all highlights
             this._aPositionTexts.forEach(oText => {
@@ -377,7 +377,7 @@ sap.ui.define([
                 this._currentIndex++;
                 this._highlightCurrent();
             } else {
-                sap.m.MessageBox.information(
+                MessageBox.information(
                     that.oBundle.getText("move_page"),
                     {
                         actions: [sap.m.MessageBox.Action.OK],
@@ -390,13 +390,6 @@ sap.ui.define([
                 );
 
             }
-        },
-
-        onAfterRendering: function () {
-        },
-
-        // onConfirm: function () {
-        //     this.getOwnerComponent().getRouter().navTo("LabelPrint");
-        // }
+        }
     });
 });
