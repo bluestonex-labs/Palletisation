@@ -68,3 +68,7 @@
 .twoRemPadding {
     padding: 2rem;
 }
+
+.duplicatePosition{
+    background-color: yellow !important;
+}

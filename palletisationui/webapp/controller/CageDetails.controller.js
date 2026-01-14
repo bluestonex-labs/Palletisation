@@ -16,7 +16,7 @@ sap.ui.define([
             this._pageSize = 5;
             this._currentPage = 0;
             this._currentIndex = 0;
-             var aSelectedRecord = this.getOwnerComponent().getModel("selectedRecord").getData();
+            var aSelectedRecord = this.getOwnerComponent().getModel("selectedRecord").getData();
             this.getView().byId("cageTitle").setText(aSelectedRecord.Description);
             this.getView().byId("LabelRoute").setText(this.getOwnerComponent().getModel("CurrentRouteData").getData().key);
             this._createDynamicTable1();
@@ -256,8 +256,8 @@ sap.ui.define([
                             Uom_UnitCode: item.Uom_UnitCode,
                             PositionInCage: item.PositionInCage,
                             Status: "None",
-                            Drop:item.Drop,
-                            IsPalletable:item.IsPalletable
+                            Drop: item.Drop,
+                            IsPalletable: item.IsPalletable
                         });
                     });
 
@@ -282,7 +282,17 @@ sap.ui.define([
 
             // Manage button visibility
             this.getView().byId("btnUp").setVisible(this._currentPage > 0);
-            this.getView().byId("btnDown").setVisible(end < this._allData.length);
+            this.getView().byId("btnDown").setVisible(end < this._allData.length); 
+        },
+
+        highlightSamePosition: function () {
+            this._aPositionTexts.forEach(oText => {
+                //oText.getParent().removeStyleClass("duplicatePosition");
+                var posCount = this.checkAndHiglightSamePosition(oText.getItems()[0].getText());
+                if (posCount > 1) {
+                    oText.addStyleClass("duplicatePosition");
+                }
+            });
         },
 
         onShowMore: function () {
@@ -323,7 +333,7 @@ sap.ui.define([
 
             // Create Columns
             for (var i = 0; i < columnsPerRow; i++) {
-                oTable.addColumn(new sap.m.Column({}));
+                oTable.addColumn(new sap.m.Column({ hAlign: sap.ui.core.TextAlign.Center}));
             }
 
             // Generate Data (e.g., [1,2,3,...,noOfPositions])
@@ -336,20 +346,22 @@ sap.ui.define([
                 for (var c = 0; c < columnsPerRow; c++) {
                     var index = r * columnsPerRow + c;
                     var sText = aPositions[index] ? aPositions[index].toString() : "";
+                    var oHBox = new sap.m.HBox();
                     var oText = new sap.m.Text({ text: sText });
-                    this._aPositionTexts.push(oText);
-                    oRow.addCell(oText);
+                    oHBox.addItem(oText);
+                    this._aPositionTexts.push(oHBox);
+                    oRow.addCell(oHBox);
                 }
-
                 oTable.addItem(oRow);
             }
             this._highlightCurrent();
+            this.highlightSamePosition();
         },
 
         _highlightCurrent: function () {
             // Remove all highlights
             this._aPositionTexts.forEach(oText => {
-                oText.removeStyleClass("greenCells");
+                oText.getItems()[0].removeStyleClass("greenCells");
             });
 
             // Get current record
@@ -364,7 +376,7 @@ sap.ui.define([
             var position = currentRecord.PositionInCage;
             var oTargetText = this._aPositionTexts[position - 1];
             if (oTargetText) {
-                oTargetText.addStyleClass("greenCells");
+                oTargetText.getItems()[0].addStyleClass("greenCells");
             }
             this._updatePagedData();
         },
@@ -390,6 +402,20 @@ sap.ui.define([
                 );
 
             }
+        },
+
+        checkAndHiglightSamePosition: function (sValue) {
+            // Get all values for this column from the model/context
+            // Example: Check if sValue appears more than once in the 'items' array for this column
+            var oTable = this.byId("table0");
+            var aItems = oTable.getModel("flattened").getData().visibleResults;
+            var count = 0;
+            aItems.forEach(function (item) {
+                if (parseInt(item.PositionInCage) === parseInt(sValue)) {
+                    count++;
+                }
+            });
+            return count;
         }
     });
 });
