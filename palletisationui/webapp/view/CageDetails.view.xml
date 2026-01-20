@@ -17,6 +17,9 @@
                                 <Text text="{i18n>cage_id}"/>
                             </Column>
                             <Column>
+                                <Text text="Drop"/>
+                            </Column>
+                            <Column>
                                 <Text text="{i18n>material}"/>
                             </Column>
                             <Column>
@@ -37,6 +40,7 @@
                             <ColumnListItem>
                                 <cells>
                                     <Text text="{flattened>CageID}"/>
+                                    <Text text="{flattened>Drop}"/>
                                     <Text text="{flattened>Material}"/>
                                     <Text text="{flattened>TotalQuantity}"/>
                                     <Text text="{flattened>Uom_UnitCode}"/>

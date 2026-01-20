@@ -25,220 +25,475 @@ sap.ui.define([
 
         _createDynamicTable1: function () {
             // Suppose you already have your data model set
-            var oModel = this.getOwnerComponent().getModel("cageDetails");
 
-            /*var value = {
-                "items": {
-                    "2345": [
-                        {
-                            "CageID": "2345",
-                            "DeliveryDate": "2025-02-18",
-                            "ID": "PICK_52930",
-                            "IsShort": false,
-                            "MHEType_ID": null,
-                            "MediaPlacement": 1,
-                            "MediaType_ID": "2",
-                            "Media_ID": "CA",
-                            "NoOfPackingBoxRequired": 0,
-                            "NominalWeight": "195.880",
-                            "PalletID": null,
-                            "PickJob": null,
-                            "PickType_ID": "MT",
-                            "PickerUserID": null,
-                            "Plant_Plant": "BR10",
-                            "Route": "T43203",
-                            "Sequence": 113,
-                            "Status_ID": "COMPLETED",
-                            "Temperature_ID": "Frozen",
-                            "TotalCube": "488.509",
-                            "PickType": {
-                                "Description": "Multi Pick",
-                                "ID": "MT"
-                            },
-                            "MediaType": {
-                                "ID": "2",
-                                "MaximumWeightMulti": "600.000",
-                                "MultiCubeMax": "1183.200",
-                                "NoOfPosition": 9
-                            },
-                            "Media": {
-                                "Description": "Cage",
-                                "ID": "CA"
-                            },
-                            "Plant": {
-                                "Description": null,
-                                "Plant": "BR10"
-                            },
-                            "Status": {
-                                "Description": "Complete Full",
-                                "ID": "COMPLETED"
-                            },
-                            "Temperature": {
-                                "Description": "Frozen",
-                                "ID": "Frozen"
-                            },
-                            "To_PickTaskItems": [
-                                {
-                                    "ActualWeight": null,
-                                    "Cube": "96.000",
-                                    "Drop": 120,
-                                    "ItemID": "bd762575-9e86-4acb-bce0-79a8a625ac83",
-                                    "Material_Material": "000000000000071897",
-                                    "NominalWeight": "24.000",
-                                    "OpenQuantity": "0.000",
-                                    "PositionInCage": 1,
-                                    "ShipTo": "0000038689",
-                                    "Status_ID": "COMPLETED",
-                                    "TotalQuantity": "5.000",
-                                    "Uom_UnitCode": "CT",
-                                    "Warehouse_WarehouseNumber": "BR1",
-                                    "Material": {
-                                        "Material": "000000000000071897",
-                                        "MaterialDescription": "PANE COLIN ALSK CAC MSC QSA 120G SYE4.8K"
-                                    },
-                                    "Status": {
-                                        "Description": "Complete Full",
-                                        "ID": "COMPLETED"
-                                    },
-                                    "Warehouse": {
-                                        "WarehouseNumber": "BR1",
-                                        "WhseNoDescr": "Chilled Opp. Warehouse"
-                                    },
-                                    "IsPalletable": true
+            /*var data = {
+                "@odata.context": "$metadata#Edm.String",
+                "value": {
+                    "items": {
+                        "027": [
+                            {
+                                "CageID": "027",
+                                "DeliveryDate": "2025-11-27",
+                                "ID": "PICK_730",
+                                "IsShort": false,
+                                "MHEType_ID": null,
+                                "MediaPlacement": 1,
+                                "MediaType_ID": "2",
+                                "Media_ID": "CA",
+                                "NoOfPackingBoxRequired": 2,
+                                "NominalWeight": "180.198",
+                                "PalletID": null,
+                                "PickJob": "E2E943009545D4AA1900297AB0C7639F",
+                                "PickType_ID": "MT",
+                                "PickerUserID": "FRSERPETAS",
+                                "Plant_Plant": "BR10",
+                                "Route": "T44127",
+                                "Sequence": 3,
+                                "Status_ID": "INPROGRESS",
+                                "Temperature_ID": "Frozen",
+                                "TotalCube": "492.369",
+                                "PickType": {
+                                    "Description": "Multi Pick",
+                                    "ID": "MT"
                                 },
-
-
-                            ],
-                            "To_Marshalling": {
-                                "LastDrop": 120
+                                "MediaType": {
+                                    "ID": "2",
+                                    "MaximumWeightMulti": "600.000",
+                                    "MultiCubeMax": "1183.200",
+                                    "NoOfPosition": 9
+                                },
+                                "Media": {
+                                    "Description": "Cage",
+                                    "ID": "CA"
+                                },
+                                "Plant": {
+                                    "Description": "BRUGUIERES",
+                                    "Plant": "BR10"
+                                },
+                                "Status": {
+                                    "Description": "In Progress",
+                                    "ID": "INPROGRESS"
+                                },
+                                "Temperature": {
+                                    "Description": "Frozen",
+                                    "ID": "Frozen"
+                                },
+                                "To_PickTaskItems": [
+                                    {
+                                        "ActualWeight": null,
+                                        "Cube": "26.007",
+                                        "Drop": 120,
+                                        "ItemID": "6f57f0ae-a921-49b6-a272-6f8a434970f7",
+                                        "Material_Material": "000000000000035558",
+                                        "NominalWeight": "9.000",
+                                        "OpenQuantity": "0.000",
+                                        "PositionInCage": 1,
+                                        "ShipTo": "0000788657",
+                                        "Status_ID": "COMPLETED",
+                                        "TotalQuantity": "3.000",
+                                        "Uom_UnitCode": "CT",
+                                        "Warehouse_WarehouseNumber": "BR1",
+                                        "Material": {
+                                            "Material": "000000000000035558",
+                                            "MaterialDescription": "FLT ROUGET BARB.QSA 20/40G CT3KG"
+                                        },
+                                        "Status": {
+                                            "Description": "Complete Full",
+                                            "ID": "COMPLETED"
+                                        },
+                                        "Warehouse": {
+                                            "WarehouseNumber": "BR1",
+                                            "WhseNoDescr": "Chilled Opp. Warehouse"
+                                        },
+                                        "IsPalletable": true
+                                    },
+                                    {
+                                        "ActualWeight": null,
+                                        "Cube": "45.264",
+                                        "Drop": 120,
+                                        "ItemID": "20d88511-092b-494c-a4bb-3be856ebbe50",
+                                        "Material_Material": "000000000000073200",
+                                        "NominalWeight": "20.000",
+                                        "OpenQuantity": "0.000",
+                                        "PositionInCage": 2,
+                                        "ShipTo": "0000788657",
+                                        "Status_ID": "COMPLETED",
+                                        "TotalQuantity": "4.000",
+                                        "Uom_UnitCode": "CT",
+                                        "Warehouse_WarehouseNumber": "BR1",
+                                        "Material": {
+                                            "Material": "000000000000073200",
+                                            "MaterialDescription": "AIGUIL.PLT PANEE CORN-FL.HALAL ST1KG X5"
+                                        },
+                                        "Status": {
+                                            "Description": "Complete Full",
+                                            "ID": "COMPLETED"
+                                        },
+                                        "Warehouse": {
+                                            "WarehouseNumber": "BR1",
+                                            "WhseNoDescr": "Chilled Opp. Warehouse"
+                                        },
+                                        "IsPalletable": true
+                                    },
+                                    {
+                                        "ActualWeight": null,
+                                        "Cube": "14.756",
+                                        "Drop": 120,
+                                        "ItemID": "2b363893-1d0c-4e78-af8d-10524ea5f8e2",
+                                        "Material_Material": "000000000000076756",
+                                        "NominalWeight": "5.118",
+                                        "OpenQuantity": "0.000",
+                                        "PositionInCage": 2,
+                                        "ShipTo": "0000788657",
+                                        "Status_ID": "COMPLETED",
+                                        "TotalQuantity": "2.000",
+                                        "Uom_UnitCode": "BC",
+                                        "Warehouse_WarehouseNumber": "BR1",
+                                        "Material": {
+                                            "Material": "000000000000076756",
+                                            "MaterialDescription": "C/G CHOCOLAT NESTLE BC2.56KG-5L"
+                                        },
+                                        "Status": {
+                                            "Description": "Complete Full",
+                                            "ID": "COMPLETED"
+                                        },
+                                        "Warehouse": {
+                                            "WarehouseNumber": "BR1",
+                                            "WhseNoDescr": "Chilled Opp. Warehouse"
+                                        },
+                                        "IsPalletable": true
+                                    },
+                                    {
+                                        "ActualWeight": null,
+                                        "Cube": "10.097",
+                                        "Drop": 90,
+                                        "ItemID": "d94edb1a-0f0c-4bf3-8edd-79f04dcea182",
+                                        "Material_Material": "000000000000077471",
+                                        "NominalWeight": "4.000",
+                                        "OpenQuantity": "0.000",
+                                        "PositionInCage": 2,
+                                        "ShipTo": "0000760740",
+                                        "Status_ID": "COMPLETED",
+                                        "TotalQuantity": "1.000",
+                                        "Uom_UnitCode": "CT",
+                                        "Warehouse_WarehouseNumber": "BR1",
+                                        "Material": {
+                                            "Material": "000000000000077471",
+                                            "MaterialDescription": "GRATINE SAVOYARDE 130G ENV.SYC CT4KG"
+                                        },
+                                        "Status": {
+                                            "Description": "Complete Full",
+                                            "ID": "COMPLETED"
+                                        },
+                                        "Warehouse": {
+                                            "WarehouseNumber": "BR1",
+                                            "WhseNoDescr": "Chilled Opp. Warehouse"
+                                        },
+                                        "IsPalletable": true
+                                    },
+                                    {
+                                        "ActualWeight": null,
+                                        "Cube": "18.050",
+                                        "Drop": 90,
+                                        "ItemID": "8265b4b6-44bc-4c6f-a4af-a8c5cc196d3d",
+                                        "Material_Material": "000000000000076109",
+                                        "NominalWeight": "10.000",
+                                        "OpenQuantity": "0.000",
+                                        "PositionInCage": 2,
+                                        "ShipTo": "0000760740",
+                                        "Status_ID": "COMPLETED",
+                                        "TotalQuantity": "1.000",
+                                        "Uom_UnitCode": "CT",
+                                        "Warehouse_WarehouseNumber": "BR1",
+                                        "Material": {
+                                            "Material": "000000000000076109",
+                                            "MaterialDescription": "CAROTTE PARISIENNE SYC ST2.5KG X4"
+                                        },
+                                        "Status": {
+                                            "Description": "Complete Full",
+                                            "ID": "COMPLETED"
+                                        },
+                                        "Warehouse": {
+                                            "WarehouseNumber": "BR1",
+                                            "WhseNoDescr": "Chilled Opp. Warehouse"
+                                        },
+                                        "IsPalletable": true
+                                    },
+                                    {
+                                        "ActualWeight": null,
+                                        "Cube": "11.520",
+                                        "Drop": 60,
+                                        "ItemID": "2416a97c-48a5-4fc4-b3ed-30972030c2f5",
+                                        "Material_Material": "000000000000074916",
+                                        "NominalWeight": "6.000",
+                                        "OpenQuantity": "0.000",
+                                        "PositionInCage": 3,
+                                        "ShipTo": "0000419871",
+                                        "Status_ID": "COMPLETED",
+                                        "TotalQuantity": "6.000",
+                                        "Uom_UnitCode": "ST",
+                                        "Warehouse_WarehouseNumber": "BR1",
+                                        "Material": {
+                                            "Material": "000000000000074916",
+                                            "MaterialDescription": "PUREE AVOCAT IQF ST1KG X10"
+                                        },
+                                        "Status": {
+                                            "Description": "Complete Full",
+                                            "ID": "COMPLETED"
+                                        },
+                                        "Warehouse": {
+                                            "WarehouseNumber": "BR1",
+                                            "WhseNoDescr": "Chilled Opp. Warehouse"
+                                        },
+                                        "IsPalletable": true
+                                    },
+                                    {
+                                        "ActualWeight": null,
+                                        "Cube": "33.572",
+                                        "Drop": 60,
+                                        "ItemID": "74dc2f76-6e7c-4d71-80c5-823fbcde7165",
+                                        "Material_Material": "000000000000071593",
+                                        "NominalWeight": "10.000",
+                                        "OpenQuantity": "0.000",
+                                        "PositionInCage": 3,
+                                        "ShipTo": "0000419871",
+                                        "Status_ID": "COMPLETED",
+                                        "TotalQuantity": "2.000",
+                                        "Uom_UnitCode": "CT",
+                                        "Warehouse_WarehouseNumber": "BR1",
+                                        "Material": {
+                                            "Material": "000000000000071593",
+                                            "MaterialDescription": "HAR.V XFIN BKE CE2 ST2.5KG X2"
+                                        },
+                                        "Status": {
+                                            "Description": "Complete Full",
+                                            "ID": "COMPLETED"
+                                        },
+                                        "Warehouse": {
+                                            "WarehouseNumber": "BR1",
+                                            "WhseNoDescr": "Chilled Opp. Warehouse"
+                                        },
+                                        "IsPalletable": true
+                                    },
+                                    {
+                                        "ActualWeight": null,
+                                        "Cube": "33.572",
+                                        "Drop": 60,
+                                        "ItemID": "37ee7484-0f7f-4952-9c9c-19bdd054b483",
+                                        "Material_Material": "000000000000071593",
+                                        "NominalWeight": "10.000",
+                                        "OpenQuantity": "0.000",
+                                        "PositionInCage": 4,
+                                        "ShipTo": "0000419871",
+                                        "Status_ID": "COMPLETED",
+                                        "TotalQuantity": "2.000",
+                                        "Uom_UnitCode": "CT",
+                                        "Warehouse_WarehouseNumber": "BR1",
+                                        "Material": {
+                                            "Material": "000000000000071593",
+                                            "MaterialDescription": "HAR.V XFIN BKE CE2 ST2.5KG X2"
+                                        },
+                                        "Status": {
+                                            "Description": "Complete Full",
+                                            "ID": "COMPLETED"
+                                        },
+                                        "Warehouse": {
+                                            "WarehouseNumber": "BR1",
+                                            "WhseNoDescr": "Chilled Opp. Warehouse"
+                                        },
+                                        "IsPalletable": true
+                                    },
+                                    {
+                                        "ActualWeight": null,
+                                        "Cube": "4.256",
+                                        "Drop": 60,
+                                        "ItemID": "a9363c45-380c-4335-a7a8-9f329568a89e",
+                                        "Material_Material": "000000000000035302",
+                                        "NominalWeight": "2.000",
+                                        "OpenQuantity": "0.000",
+                                        "PositionInCage": 3,
+                                        "ShipTo": "0000419871",
+                                        "Status_ID": "COMPLETED",
+                                        "TotalQuantity": "1.000",
+                                        "Uom_UnitCode": "BT",
+                                        "Warehouse_WarehouseNumber": "BR1",
+                                        "Material": {
+                                            "Material": "000000000000035302",
+                                            "MaterialDescription": "CREVETTE SAUV ENT.CRUE C/T 10-20 BT2KGX6"
+                                        },
+                                        "Status": {
+                                            "Description": "Complete Full",
+                                            "ID": "COMPLETED"
+                                        },
+                                        "Warehouse": {
+                                            "WarehouseNumber": "BR1",
+                                            "WhseNoDescr": "Chilled Opp. Warehouse"
+                                        },
+                                        "IsPalletable": true
+                                    },
+                                    {
+                                        "ActualWeight": null,
+                                        "Cube": "25.536",
+                                        "Drop": 60,
+                                        "ItemID": "dfb0c291-0168-4976-8c83-b6a000bcaace",
+                                        "Material_Material": "000000000000035302",
+                                        "NominalWeight": "12.000",
+                                        "OpenQuantity": "0.000",
+                                        "PositionInCage": 4,
+                                        "ShipTo": "0000419871",
+                                        "Status_ID": "COMPLETED",
+                                        "TotalQuantity": "6.000",
+                                        "Uom_UnitCode": "BT",
+                                        "Warehouse_WarehouseNumber": "BR1",
+                                        "Material": {
+                                            "Material": "000000000000035302",
+                                            "MaterialDescription": "CREVETTE SAUV ENT.CRUE C/T 10-20 BT2KGX6"
+                                        },
+                                        "Status": {
+                                            "Description": "Complete Full",
+                                            "ID": "COMPLETED"
+                                        },
+                                        "Warehouse": {
+                                            "WarehouseNumber": "BR1",
+                                            "WhseNoDescr": "Chilled Opp. Warehouse"
+                                        },
+                                        "IsPalletable": true
+                                    },
+                                    {
+                                        "ActualWeight": null,
+                                        "Cube": "33.208",
+                                        "Drop": 30,
+                                        "ItemID": "77f78419-d686-4c9c-8836-0b7511194392",
+                                        "Material_Material": "000000000000075157",
+                                        "NominalWeight": "5.040",
+                                        "OpenQuantity": "0.000",
+                                        "PositionInCage": 5,
+                                        "ShipTo": "0005165567",
+                                        "Status_ID": "COMPLETED",
+                                        "TotalQuantity": "7.000",
+                                        "Uom_UnitCode": "CT",
+                                        "Warehouse_WarehouseNumber": "BR1",
+                                        "Material": {
+                                            "Material": "000000000000075157",
+                                            "MaterialDescription": "MINI BABA RHUM 15G ENV.BKE X48"
+                                        },
+                                        "Status": {
+                                            "Description": "Complete Full",
+                                            "ID": "COMPLETED"
+                                        },
+                                        "Warehouse": {
+                                            "WarehouseNumber": "BR1",
+                                            "WhseNoDescr": "Chilled Opp. Warehouse"
+                                        },
+                                        "IsPalletable": true
+                                    },
+                                    {
+                                        "ActualWeight": null,
+                                        "Cube": "65.080",
+                                        "Drop": 30,
+                                        "ItemID": "0342009b-33b2-4c5b-8a89-585156c629bf",
+                                        "Material_Material": "000000000000077791",
+                                        "NominalWeight": "14.400",
+                                        "OpenQuantity": "0.000",
+                                        "PositionInCage": 5,
+                                        "ShipTo": "0005165567",
+                                        "Status_ID": "COMPLETED",
+                                        "TotalQuantity": "8.000",
+                                        "Uom_UnitCode": "CT",
+                                        "Warehouse_WarehouseNumber": "BR1",
+                                        "Material": {
+                                            "Material": "000000000000077791",
+                                            "MaterialDescription": "FONDANT CHOC. SYC 90GX20 stockage -18°C"
+                                        },
+                                        "Status": {
+                                            "Description": "Complete Full",
+                                            "ID": "COMPLETED"
+                                        },
+                                        "Warehouse": {
+                                            "WarehouseNumber": "BR1",
+                                            "WhseNoDescr": "Chilled Opp. Warehouse"
+                                        },
+                                        "IsPalletable": true
+                                    },
+                                    {
+                                        "ActualWeight": null,
+                                        "Cube": "9.662",
+                                        "Drop": 30,
+                                        "ItemID": "920d44ff-166d-40d1-8c56-147296434497",
+                                        "Material_Material": "000000000000076568",
+                                        "NominalWeight": "1.320",
+                                        "OpenQuantity": "0.000",
+                                        "PositionInCage": 5,
+                                        "ShipTo": "0005165567",
+                                        "Status_ID": "COMPLETED",
+                                        "TotalQuantity": "2.000",
+                                        "Uom_UnitCode": "CT",
+                                        "Warehouse_WarehouseNumber": "BR1",
+                                        "Material": {
+                                            "Material": "000000000000076568",
+                                            "MaterialDescription": "CITRON GIVRE 110G-165ML NESTLE CT6PC"
+                                        },
+                                        "Status": {
+                                            "Description": "Complete Full",
+                                            "ID": "COMPLETED"
+                                        },
+                                        "Warehouse": {
+                                            "WarehouseNumber": "BR1",
+                                            "WhseNoDescr": "Chilled Opp. Warehouse"
+                                        },
+                                        "IsPalletable": true
+                                    },
+                                    {
+                                        "ActualWeight": null,
+                                        "Cube": "9.662",
+                                        "Drop": 30,
+                                        "ItemID": "937fd23d-7cba-4ed5-92ba-6c42fed1f73c",
+                                        "Material_Material": "000000000000076568",
+                                        "NominalWeight": "1.320",
+                                        "OpenQuantity": "0.000",
+                                        "PositionInCage": 6,
+                                        "ShipTo": "0005165567",
+                                        "Status_ID": "COMPLETED",
+                                        "TotalQuantity": "2.000",
+                                        "Uom_UnitCode": "CT",
+                                        "Warehouse_WarehouseNumber": "BR1",
+                                        "Material": {
+                                            "Material": "000000000000076568",
+                                            "MaterialDescription": "CITRON GIVRE 110G-165ML NESTLE CT6PC"
+                                        },
+                                        "Status": {
+                                            "Description": "Complete Full",
+                                            "ID": "COMPLETED"
+                                        },
+                                        "Warehouse": {
+                                            "WarehouseNumber": "BR1",
+                                            "WhseNoDescr": "Chilled Opp. Warehouse"
+                                        },
+                                        "IsPalletable": true
+                                    }
+                                ],
+                                "To_Marshalling": {
+                                    "LastDrop": 120
+                                }
                             }
-                        }
-                    ],
-                    "2346": [
-                        {
-                            "CageID": "2346",
-                            "DeliveryDate": "2025-02-18",
-                            "ID": "PICK_52930",
-                            "IsShort": false,
-                            "MHEType_ID": null,
-                            "MediaPlacement": 1,
-                            "MediaType_ID": "2",
-                            "Media_ID": "CA",
-                            "NoOfPackingBoxRequired": 0,
-                            "NominalWeight": "195.880",
-                            "PalletID": null,
-                            "PickJob": null,
-                            "PickType_ID": "MT",
-                            "PickerUserID": null,
-                            "Plant_Plant": "BR10",
-                            "Route": "T43203",
-                            "Sequence": 113,
-                            "Status_ID": "COMPLETED",
-                            "Temperature_ID": "Frozen",
-                            "TotalCube": "488.509",
-                            "PickType": {
-                                "Description": "Multi Pick",
-                                "ID": "MT"
-                            },
-                            "MediaType": {
-                                "ID": "2",
-                                "MaximumWeightMulti": "600.000",
-                                "MultiCubeMax": "1183.200",
-                                "NoOfPosition": 9
-                            },
-                            "Media": {
-                                "Description": "Cage",
-                                "ID": "CA"
-                            },
-                            "Plant": {
-                                "Description": null,
-                                "Plant": "BR10"
-                            },
-                            "Status": {
-                                "Description": "Complete Full",
-                                "ID": "COMPLETED"
-                            },
-                            "Temperature": {
-                                "Description": "Frozen",
-                                "ID": "Frozen"
-                            },
-                            "To_PickTaskItems": [
-                                {
-                                    "ActualWeight": null,
-                                    "Cube": "96.000",
-                                    "Drop": 120,
-                                    "ItemID": "bd762575-9e86-4acb-bce0-79a8a625ac83",
-                                    "Material_Material": "000000000000071897",
-                                    "NominalWeight": "24.000",
-                                    "OpenQuantity": "0.000",
-                                    "PositionInCage": 1,
-                                    "ShipTo": "0000038689",
-                                    "Status_ID": "COMPLETED",
-                                    "TotalQuantity": "5.000",
-                                    "Uom_UnitCode": "CT",
-                                    "Warehouse_WarehouseNumber": "BR1",
-                                    "Material": {
-                                        "Material": "000000000000071897",
-                                        "MaterialDescription": "PANE COLIN ALSK CAC MSC QSA 120G SYE4.8K"
-                                    },
-                                    "Status": {
-                                        "Description": "Complete Full",
-                                        "ID": "COMPLETED"
-                                    },
-                                    "Warehouse": {
-                                        "WarehouseNumber": "BR1",
-                                        "WhseNoDescr": "Chilled Opp. Warehouse"
-                                    },
-                                    "IsPalletable": true
-                                },
-
-                                {
-                                    "ActualWeight": null,
-                                    "Cube": "6.281",
-                                    "Drop": 60,
-                                    "ItemID": "7a523c15-6abf-48df-b656-cf72a6fe841b",
-                                    "Material_Material": "000000000000039383",
-                                    "NominalWeight": "2.500",
-                                    "OpenQuantity": "0.000",
-                                    "PositionInCage": 3,
-                                    "ShipTo": "0000756908",
-                                    "Status_ID": "COMPLETED",
-                                    "TotalQuantity": "1.000",
-                                    "Uom_UnitCode": "ST",
-                                    "Warehouse_WarehouseNumber": "BR1",
-                                    "Material": {
-                                        "Material": "000000000000039383",
-                                        "MaterialDescription": "BATON.CAROTTE EXP.DAUCY CE2 ST2.5KG X4"
-                                    },
-                                    "Status": {
-                                        "Description": "Complete Full",
-                                        "ID": "COMPLETED"
-                                    },
-                                    "Warehouse": {
-                                        "WarehouseNumber": "BR1",
-                                        "WhseNoDescr": "Chilled Opp. Warehouse"
-                                    },
-                                    "IsPalletable": true
-                                },
-
-                            ],
-                            "To_Marshalling": {
-                                "LastDrop": 120
-                            }
-                        }
-                    ]
-                },
-                "totalCube": 488.509,
-                "totalWeight": 195.88,
-                "MediaType_ID": {
-                    "ID": "2",
-                    "MaximumWeightMulti": "600.000",
-                    "MultiCubeMax": "1183.200",
-                    "NoOfPosition": 9
+                        ]
+                    },
+                    "totalCube": 340.24199999999996,
+                    "totalWeight": 110.198,
+                    "MediaType_ID": {
+                        "ID": "2",
+                        "MaximumWeightMulti": "600.000",
+                        "MultiCubeMax": "1183.200",
+                        "NoOfPosition": 9
+                    }
                 }
             };*/
 
-            var oData = oModel.getData().value;
+            //this.getOwnerComponent().getModel("cageDetails").setData(data);
+            var oModel = this.getOwnerComponent().getModel("cageDetails");
+
+            var oData = //oModel.getData();
+                oModel.getData().value;
             var aFlattenedData = [];
             var createPalletData = [];
 
@@ -282,17 +537,48 @@ sap.ui.define([
 
             // Manage button visibility
             this.getView().byId("btnUp").setVisible(this._currentPage > 0);
-            this.getView().byId("btnDown").setVisible(end < this._allData.length); 
+            this.getView().byId("btnDown").setVisible(end < this._allData.length);
         },
 
         highlightSamePosition: function () {
-            this._aPositionTexts.forEach(oText => {
-                //oText.getParent().removeStyleClass("duplicatePosition");
-                var posCount = this.checkAndHiglightSamePosition(oText.getItems()[0].getText());
-                if (posCount > 1) {
-                    oText.addStyleClass("duplicatePosition");
+            this._aPositionTexts.forEach((oText, index) => {
+                const groupedByDrop = Map.groupBy(this._allData, cage => cage.PositionInCage);
+                const selectedGroupedMap = new Map();
+                for (const [PositionInCage, items] of groupedByDrop.entries()) {
+                    selectedGroupedMap.set(PositionInCage, items.map(item => item.Drop));
                 }
+
+                let uniqueValues = new Set();
+                for (let [key, value] of selectedGroupedMap.entries()) {
+                    // console.log(`Key: ${key}, Value: ${value}`);
+                    uniqueValues.add(value);
+                }
+
+                var positionCountByDrops = Array.from(new Map(
+                    Array.from(uniqueValues.entries(), ([key, valueArray]) => {
+                        return [key, new Set(valueArray).size];
+                    })
+                ).entries());
+
+                var newSet = {};
+                var newArray = [];
+
+                positionCountByDrops.forEach((item, index) => {
+                    newSet = {
+                        "Index": index,
+                        "Count": item[1]
+                    };
+                    newArray.push(newSet);
+                });
+
+                if (newArray[parseInt(index)] !== undefined) {
+                    if (index === newArray[parseInt(index)].Index && newArray[parseInt(index)].Count > 1) {
+                        oText.addStyleClass("duplicatePosition");
+                    }
+                }
+                
             });
+
         },
 
         onShowMore: function () {
@@ -333,7 +619,7 @@ sap.ui.define([
 
             // Create Columns
             for (var i = 0; i < columnsPerRow; i++) {
-                oTable.addColumn(new sap.m.Column({ hAlign: sap.ui.core.TextAlign.Center}));
+                oTable.addColumn(new sap.m.Column({ hAlign: sap.ui.core.TextAlign.Center }));
             }
 
             // Generate Data (e.g., [1,2,3,...,noOfPositions])
@@ -387,6 +673,9 @@ sap.ui.define([
             if (this._currentIndex < this._allData.length - 1) {
                 this._allData[this._currentIndex].Status = 'Success';
                 this._currentIndex++;
+                if ((this._currentIndex % 5) === 0) {
+                    this.onShowMore();
+                }
                 this._highlightCurrent();
             } else {
                 MessageBox.information(
@@ -404,14 +693,22 @@ sap.ui.define([
             }
         },
 
-        checkAndHiglightSamePosition: function (sValue) {
-            // Get all values for this column from the model/context
-            // Example: Check if sValue appears more than once in the 'items' array for this column
-            var oTable = this.byId("table0");
-            var aItems = oTable.getModel("flattened").getData().visibleResults;
+        checkSamePosition: function (sValue) {
+            var aItems = this._allData;
             var count = 0;
             aItems.forEach(function (item) {
                 if (parseInt(item.PositionInCage) === parseInt(sValue)) {
+                    count++;
+                }
+            });
+            return count;
+        },
+
+        checkSamePositionWithDifferentDrop: function (sValue) {
+            var aItems = this._allData;
+            var count = 0;
+            aItems.forEach(function (item) {
+                if (parseInt(item.Drop) !== parseInt(sValue)) {
                     count++;
                 }
             });
