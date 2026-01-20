@@ -30,7 +30,9 @@ sap.ui.define([
                     "Accept": "application/json"
                 },
                 success: function (data) {
-                    that._aAllStations = data.value;
+                    that._aAllStations = data.value.sort((a, b) => {
+						return parseInt(a.ID.slice(1), 10) - parseInt(b.ID.slice(1), 10);
+					});
                     that._pageSize = 3;
                     that._currentIndex = 0; // start at page 0
                     that._loadStations();
