@@ -1,7 +1,8 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
-    "sap/m/MessageBox"
-], (Controller, MessageBox) => {
+    "sap/m/MessageBox",
+    "sap/m/GroupHeaderListItem"
+], (Controller, MessageBox, GroupHeaderListItem) => {
     "use strict";
 
     return Controller.extend("com.sysco.wm.palletisationui.controller.CageDetails", {
@@ -492,9 +493,8 @@ sap.ui.define([
             //this.getOwnerComponent().getModel("cageDetails").setData(data);
             var oModel = this.getOwnerComponent().getModel("cageDetails");
 
-            var oData = //oModel.getData();
-                oModel.getData().value;
-            var aFlattenedData = [];
+            var oData = oModel.getData().value;
+            var fData = [];
             var createPalletData = [];
 
             for (let cageId in oData.items) {
@@ -504,27 +504,185 @@ sap.ui.define([
                     let aItems = cage.To_PickTaskItems || [];
 
                     aItems.forEach(item => {
-                        aFlattenedData.push({
+                        fData.push({
                             CageID: cageID,
-                            Material: item.Material_Material.slice(-6),
                             TotalQuantity: parseInt(item.TotalQuantity),
+                            OpenQuantity: parseInt(item.OpenQuantity),
                             Uom_UnitCode: item.Uom_UnitCode,
                             PositionInCage: item.PositionInCage,
                             Status: "None",
                             Drop: item.Drop,
-                            IsPalletable: item.IsPalletable
+                            IsPalletable: item.IsPalletable,
+                            IsCase: item.IsCase,
+                            DenominatorForCase: item.DenominatorForCase,
+                            NumeratorForCase: item.NumeratorForCase,
+                            TotalCase: "",
+                            TotalUnits: "",
+                            PackingBoxRequired: item.PackingBoxRequired,
+                            Cube: item.Cube,
+                            PackBoxType_PackBoxType: item.PackBoxType_PackBoxType,
+                            PackBoxVolume: item.PackBoxVolume
                         });
                     });
-
-
                 });
             }
 
-            // Create a new model for the flattened data
+            this.calculateCasenUnits(fData);
+            this._allFlatData = fData;
+            const getUniquePositions = (items) => {
+                const grouped = items.reduce((acc, item) => {
+                    const key = `${item.CageID}-${item.Drop}`;
+                    if (!acc[key]) {
+                    acc[key] = new Set();
+                    }
+                    acc[key].add(item.PositionInCage);
+                    return acc;
+                }, {});
+
+                // Convert Sets back to Arrays for final output
+                return Object.keys(grouped).map(key => ({
+                    key,
+                    uniquePositions: Array.from(grouped[key])
+                }));
+            }
+            var uniqueDrops = getUniquePositions(this._allFlatData);
+
+            const uniqueInventory = this._allFlatData.filter((item, index, self) =>
+                index === self.findIndex((t) => (
+                    t.CageID === item.CageID &&
+                    t.Drop === item.Drop &&
+                    t.PositionInCage === item.PositionInCage
+                ))
+                );
+            console.log(uniqueInventory);
+
+            const newuniqueInventory = uniqueInventory.filter((item, index, self) =>
+                index === self.findIndex((t) => (
+                    t.CageID === item.CageID &&
+                    t.Drop === item.Drop
+                ))
+                );
+            console.log(newuniqueInventory);
+
+            for (var i = 0; i < newuniqueInventory.length; i++) {
+                var currentNewInv = newuniqueInventory[i];
+                for (var j = 0; j < uniqueDrops.length; j++) {
+                    var currentDrop = uniqueDrops[j];
+                    if ((currentNewInv.CageID + "-" + currentNewInv.Drop) === currentDrop.key ) {
+                        currentNewInv.concatPositionInCage = currentDrop.uniquePositions.join(", ");
+                    }
+                }
+            }
+
+            console.log(newuniqueInventory);
+            var finalArray = Object.values(newuniqueInventory);
+
+            /*const groupedObject = newuniqueInventory.reduce((accumulator, currentItem) => {
+                if (!accumulator[currentItem.CageID]) {
+                    accumulator[currentItem.CageID] = {
+                        Drop: currentItem.CageID,
+                        items: []
+                    };
+                }
+                accumulator[currentItem.CageID].items.push(currentItem);
+                return accumulator;
+            }, {});
+
+            const finalArray = Object.values(groupedObject);
+            finalArray.sort((a, b) => b.Drop - a.Drop);
+
+            for (var i = 0; i < finalArray.length; i++) {
+                var currentDropItems = finalArray[i];
+                for (var j = 0; j < currentDropItems.items.length; j++) {
+
+                    if (j === 0) {
+                        currentDropItems.items[0].concatPositionInCage = currentDropItems.items[0].PositionInCage;
+                    }
+
+                    if (currentDropItems.Drop === currentDropItems.items[j].Drop && j > 0) {
+                        if (!(currentDropItems.items[0].concatPositionInCage).toString().includes(currentDropItems.items[j].PositionInCage.toString())) {
+                            currentDropItems.items[0].concatPositionInCage = currentDropItems.items[0].concatPositionInCage + ", " + currentDropItems.items[j].PositionInCage;
+                        }
+                    }
+
+                }
+            }*/
+            
+            var filteredItems = this._allFlatData.filter(item => item.PackingBoxRequired === true);
+
+            var hash = Object.create(null), result = [];
+            filteredItems.forEach(function (o) {
+                if (!hash[o.Drop]) {
+                    hash[o.Drop] = { Drop: o.Drop, PackBoxType: o.PackBoxType_PackBoxType, Cube: 0 };
+                    result.push(hash[o.Drop]);
+                }
+                hash[o.Drop].Cube += +o.Cube;
+            });
+            console.log(result);
+
+            for (var x = 0; x < result.length; x++) {
+                var currentResult = result[x];
+                for (var y = 0; y < finalArray.length; y++) {
+                    var currentArray = finalArray[y];
+                    if (currentResult.Drop === currentArray.Drop && currentResult.PackBoxType === currentArray.PackBoxType_PackBoxType) {
+                        currentArray.Cube = currentResult.Cube;
+                    }
+                }
+            }
+
+            var aFlattenedData = finalArray;
+            /*for (var x = 0; x < finalArray.length; x++) {
+                aFlattenedData.push(finalArray[x].items[0]);
+            }*/
+
+            this.sumForCasenUnitForEachDrop(this._allFlatData, aFlattenedData);
+            this.calculatePackBoxes(aFlattenedData);
+
             var oFlatModel = new sap.ui.model.json.JSONModel({ results: aFlattenedData });
             this.getView().setModel(oFlatModel, "flattened");
             this._allData = aFlattenedData;
             this._updatePagedData();
+        },
+
+        groupAndSortDetails: function (data) {
+            // 1. Group by Id and then by drop
+            const groupedData = data.reduce((acc, item) => {
+                // Group by Id
+                if (!acc[item.CageID]) {
+                    acc[item.CageID] = {};
+                }
+                // Group by drop within the Id group
+                if (!acc[item.CageID][item.Drop]) {
+                    acc[item.CageID][item.Drop] = [];
+                }
+                acc[item.CageID][item.Drop].push(item);
+                return acc;
+            }, {});
+
+            // 2. Sort the final structure in descending order
+            // Convert the nested object into an array of objects for sorting and easier consumption
+            const result = Object.keys(groupedData).map(CageID => {
+                const Drops = Object.keys(groupedData[CageID]).map(Drop => ({
+                    Drop,
+                    details: groupedData[CageID][Drop]
+                }));
+                return {
+                    CageID: CageID,
+                    Drop: Drops
+                };
+            });
+
+            // Sort the top-level array (by Id in descending order)
+            // Note: for strings, localeCompare is better, for numbers, b - a.
+            // Assuming Id is a string for this example.
+            result.sort((a, b) => b.CageID.localeCompare(a.CageID));
+
+            // Optional: sort the drops within each Id group (e.g., by drop name descending)
+            result.forEach(item => {
+                item.Drop.sort((a, b) => b.Drop.localeCompare(a.Drop));
+            });
+
+            return result;
         },
 
         _updatePagedData: function () {
@@ -542,9 +700,10 @@ sap.ui.define([
 
         highlightSamePosition: function () {
             this._aPositionTexts.forEach((oText, index) => {
-                const groupedByDrop = Map.groupBy(this._allData, cage => cage.PositionInCage);
+                const groupedByPosition = Map.groupBy(this._allFlatData, cage => cage.PositionInCage);
+
                 const selectedGroupedMap = new Map();
-                for (const [PositionInCage, items] of groupedByDrop.entries()) {
+                for (const [PositionInCage, items] of groupedByPosition.entries()) {
                     selectedGroupedMap.set(PositionInCage, items.map(item => item.Drop));
                 }
 
@@ -576,9 +735,52 @@ sap.ui.define([
                         oText.addStyleClass("duplicatePosition");
                     }
                 }
-                
             });
+        },
 
+        calculateCasenUnits: function (data) {
+
+            for (var i = 0; i < data.length; i++) {
+                var cases = 0;
+                var units = 0;
+                var total = 0;
+                if (data[i].IsCase) {
+                    cases = (((parseInt(data[i].TotalQuantity) - parseInt(data[i].OpenQuantity)) * parseInt(data[i].DenominatorForCase)) % parseInt(data[i].NumeratorForCase));
+                    units = Math.trunc((((parseInt(data[i].TotalQuantity) - parseInt(data[i].OpenQuantity)) * parseInt(data[i].DenominatorForCase)) / parseInt(data[i].NumeratorForCase)));
+                    total = cases + units;
+                } else {
+                    total = parseInt(data[i].TotalQuantity) - parseInt(data[i].OpenQuantity);
+                }
+                data[i].totalCasenUnits = total;
+            }
+
+        },
+
+        calculatePackBoxes: function (flatData) {
+            var totalCube = 0;
+            for (var k = 0; k < flatData.length; k++) {
+                if (flatData[k].PackBoxVolume !== null && flatData[k].PackBoxVolume !== undefined) {
+                    totalCube = Math.ceil(flatData[k].Cube / flatData[k].PackBoxVolume);
+                    flatData[k].TotalPackBoxReq = totalCube;
+                } else {
+                    flatData[k].TotalPackBoxReq = 0;
+                }
+                
+            }
+        },
+
+        sumForCasenUnitForEachDrop: function (allDataRaw, flatData) {
+            for (var i = 0; i < flatData.length; i++) {
+                var currentFlatData = flatData[i];
+                var total = 0;
+                for (var j = 0; j < allDataRaw.length; j++) {
+                    var currentRawData = allDataRaw[j];
+                    if (currentFlatData.Drop === currentRawData.Drop && currentFlatData.CageID === currentRawData.CageID) {
+                        total = total + currentRawData.totalCasenUnits;
+                    }
+                }
+                currentFlatData.FinalTotal = total;
+            }
         },
 
         onShowMore: function () {
@@ -659,11 +861,14 @@ sap.ui.define([
             //this.getView().byId("cageIdOnBox").setText(`Cage ID: ${currentRecord.CageID}`);
             if (!currentRecord) return;
             //currentRecord.Status = 'Success';
-            var position = currentRecord.PositionInCage;
-            var oTargetText = this._aPositionTexts[position - 1];
-            if (oTargetText) {
-                oTargetText.getItems()[0].addStyleClass("greenCells");
+            var position = currentRecord.concatPositionInCage.split(", ");
+            for (var i = 0; i < position.length; i++) {
+                var oTargetText = this._aPositionTexts[parseInt(position[i]) - 1];
+                if (oTargetText) {
+                    oTargetText.getItems()[0].addStyleClass("greenCells");
+                }
             }
+            
             this._updatePagedData();
         },
 

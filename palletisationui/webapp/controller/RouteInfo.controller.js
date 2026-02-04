@@ -207,11 +207,14 @@ sap.ui.define([
                 MessageBox.error(that.oBundle.getText("enter_correct_cage"));
                 this.getView().byId("inCageID").setValueState("Error");
                 return;
+            } else {
+                this.getView().byId("inCageID").setValue();
             }
 
             if (that._aAllStations.length == that.count) {
                 this.getView().byId("palletizeBtn").setEnabled(true);
             }
+            
             that.updatePagedData();
 
         },
