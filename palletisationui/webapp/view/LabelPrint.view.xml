@@ -1,34 +1,42 @@
 <mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:l="sap.ui.layout" xmlns:grid="sap.ui.layout.cssgrid" xmlns:f="sap.ui.layout.form" xmlns:core="sap.ui.core" controllerName="com.sysco.wm.palletisationui.controller.LabelPrint">
     <Page title="{i18n>title}" showHeader="false" showFooter="false">
         <HBox width="100vw" fitContainer="true" visible="true" class="twoRemPadding">
-            <VBox width="70%" height="auto" alignItems="Center" alignContent="Center" justifyContent="Center" class="borderRight" fitContainer="true">
-                <VBox width="100%" alignContent="Center" alignItems="Start" class="cageVBoxMarginLeft" fitContainer="true">
+            <VBox width="70%" height="auto" class="borderRight" fitContainer="true">
+                <!--<VBox width="100%" alignContent="Center" alignItems="Start" class="cageVBoxMarginLeft" fitContainer="true">
                     <Toolbar design="Transparent" style="Clear" width="100%" class="marginLeftToolbar">
                         <Title id="titleRoute1" text=""/>
                         <ToolbarSpacer width="7rem"/>
                         <Button text="{i18n>skip}" class="blackButton roundCorner" visible="false"/>
                     </Toolbar>
                     <ObjectStatus state="Success" text="{i18n>open}" class="customBeginMargin"/>
-                </VBox>
-                <HBox width="100%" alignContent="Start" alignItems="Start" class="sapUiTinyMargin cageVBoxMarginLeft" fitContainer="true">
+                </VBox>-->
+                <HBox>
+                        <items>
+                            <Title id="titleRoute1" text="" class="sapUiTinyMargin"/>
+                            <ObjectStatus state="Success" text="{i18n>open}" class="sapUiTinyMargin"/>
+                            <Label id="LabelRoute1" text="" class="sapUiTinyMargin"/>
+                        </items>
+                    </HBox>
+                    <Button text="{i18n>skip}" class="blackButton roundCorner" visible="false"/>
+                <!--<HBox width="100%" alignContent="Start" alignItems="Start" class="sapUiTinyMargin cageVBoxMarginLeft" fitContainer="true">
                     <Label id="LabelRoute1" text=""/>
-                </HBox>
+                </HBox>-->
                 <Table id="cageList1" items="{                                 path: 'flattened>/visibleResults'                                 }" inset="false" mode="None">
                    <columns>
                             <Column>
-                                <Text text="{i18n>cage_id}"/>
+                                <Text text="{i18n>cage_id}" wrapping="false"/>
                             </Column>
                             <Column>
-                                <Text text="{i18n>material}"/>
+                                <Text text="{i18n>material}" wrapping="false"/>
                             </Column>
                             <Column>
-                                <Text text="{i18n>total_quantity}"/>
+                                <Text text="{i18n>total_quantity}" wrapping="false"/>
                             </Column>
-                            <Column>
-                                <Text text="{i18n>unit_code}"/>
+                            <Column >
+                                <Text text="{i18n>unit_code}" wrapping="false"/>
                             </Column>
-                            <Column>
-                                <Text text="{i18n>position}"/>
+                            <Column >
+                                <Text text="{i18n>position}" wrapping="false"/>
                             </Column>
                             <Column>
                                 <Text text="{i18n>status}"/>
@@ -36,7 +44,7 @@
                         </columns>
 
                         <items>
-                            <ColumnListItem>
+                            <ColumnListItem vAlign="Middle">
                                 <cells>
                                     <Text text="{flattened>CageID}"/>
                                     <Text text="{flattened>Material}"/>
