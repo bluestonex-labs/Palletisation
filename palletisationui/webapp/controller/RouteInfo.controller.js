@@ -26,6 +26,8 @@ sap.ui.define([
             this.getView().byId("titleRoute").setText(aSelectedRecord.Description);
             this.getTaskId();
 
+            this.getView().byId("inCageID").setValueState("None");
+
             //this.getCageDetails();
 
 
@@ -186,37 +188,138 @@ sap.ui.define([
             }
         },
 
+        palletiseEvt: function (payload) {
+            var that = this;
+            var oLocale = sap.ui.getCore().getConfiguration().getLocale();
+            var lang = oLocale.language;
+            var url = this.appModulePath + "/palletiseservices/CloudWM/PalletisingEvents";
+            var oBundle = that.getView().getModel("i18n").getResourceBundle();
+            var sText = "";
+            var sErrorText = "";
+            $.ajax({
+                url: url,
+                beforeSend: function (xhr) { xhr.setRequestHeader('Accept-Language', lang); },
+                type: "POST",
+                contentType: "application/json",
+                dataType: "json",
+                data: JSON.stringify(payload),
+                success: function (oData, response) {
+
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(jqXHR.responseText);
+                }
+            }, this);
+
+        },
+
+        // onCageIDInput: function (oEvent) {
+        //     var that = this;
+        //     var cageID = oEvent.getSource().getValue();
+
+        //     that._aAllStations.forEach(function (item) {
+        //         if (item.CAGEID == cageID && item.STATUS == "None") {
+        //             item.STATUS = "Success";
+        //             that.count++;
+        //         }
+        //     })
+
+        //     var val = that._aAllStations.filter(function (item) {
+        //         if (item.CAGEID == cageID) {
+        //             return item;
+        //         }
+        //     });
+        //     this.getView().byId("inCageID").setValueState("None");
+
+        //     if(val.length != 0) {
+        //         var payload = {
+        //         "Event_Timestamp": null,
+        //         "Event_Type": "CAGEID_ENTERED",
+        //         "ID": "",
+        //         "Item_ID": "",
+        //         "Level": "H",
+        //         "PickTask_ID": val[0].TASKID,
+        //         "Quantity": "0",
+        //         "User_ID": null
+        //         } 
+        //         this.palletiseEvt(payload);
+        //     }
+        //     if (val.length == 0 && cageID != "") {
+        //         MessageBox.error(that.oBundle.getText("enter_correct_cage"));
+        //         this.getView().byId("inCageID").setValueState("Error");
+        //         return;
+        //     } else {
+        //         this.getView().byId("inCageID").setValue();
+        //     }
+
+        //     if (that._aAllStations.length == that.count) {
+        //         this.getView().byId("palletizeBtn").setEnabled(true);
+        //     }
+
+        //     that.updatePagedData();
+
+        // },
         onCageIDInput: function (oEvent) {
             var that = this;
-            var cageID = oEvent.getSource().getValue();
+            var cageID = oEvent.getSource().getValue().trim();
 
-            that._aAllStations.forEach(function (item) {
-                if (item.CAGEID == cageID && item.STATUS == "None") {
-                    item.STATUS = "Success";
-                    that.count++;
-                }
-            })
+            if (!cageID) {
+                return;
+            }
 
             var val = that._aAllStations.filter(function (item) {
-                if (item.CAGEID == cageID) {
-                    return item;
-                }
+                return item.CAGEID == cageID;
             });
+
             this.getView().byId("inCageID").setValueState("None");
-            if (val.length == 0 && cageID != "") {
+
+            // Cage not found
+            if (val.length === 0) {
                 MessageBox.error(that.oBundle.getText("enter_correct_cage"));
                 this.getView().byId("inCageID").setValueState("Error");
                 return;
-            } else {
-                this.getView().byId("inCageID").setValue();
             }
 
-            if (that._aAllStations.length == that.count) {
-                this.getView().byId("palletizeBtn").setEnabled(true);
+            var oCage = val[0];
+
+            // Cage exists but NOT ready
+            if (oCage.ISREADY !== "TRUE") {
+                MessageBox.error("This cage is not ready for palletization.");
+                this.getView().byId("inCageID").setValueState("Error");
+                // this.getView().byId("inCageID").setValue("");
+                return;
             }
-            
+
+            // Cage is READY → mark as scanned
+            if (oCage.STATUS === "None") {
+                oCage.STATUS = "Success";
+                that.count++;
+            }
+
+            // Send event
+            var payload = {
+                "Event_Timestamp": null,
+                "Event_Type": "CAGEID_ENTERED",
+                "ID": "",
+                "Item_ID": "",
+                "Level": "H",
+                "PickTask_ID": oCage.TASKID,
+                "Quantity": "0",
+                "User_ID": null
+            };
+
+            this.palletiseEvt(payload);
+
+            this.getView().byId("inCageID").setValue("");
+
+            // Enable palletize if at least one cage is Success and TRUE
+            var bEnable = that._aAllStations.some(function (item) {
+                return item.STATUS === "Success" && item.ISREADY === "TRUE";
+            });
+
+            this.getView().byId("palletizeBtn").setEnabled(bEnable);
+
             that.updatePagedData();
-
         },
 
         updatePagedData: function () {
@@ -254,13 +357,58 @@ sap.ui.define([
         },
 
         onPalletise: async function () {
+            // var res = await this.getCageDetails();
+            // var oModel = new sap.ui.model.json.JSONModel(res);
+            // this.getOwnerComponent().setModel(oModel, "cageDetails");
+            // this.checkKeys.push(this.getView().getModel("routeData").getData().key);
+            // var CurrentRouteData = new sap.ui.model.json.JSONModel(this.getView().getModel("routeData").getData());
+            // this.getOwnerComponent().setModel(CurrentRouteData, "CurrentRouteData");
+            // this.getOwnerComponent().getRouter().navTo("CageDetails");
+
             var res = await this.getCageDetails();
-            var oModel = new sap.ui.model.json.JSONModel(res);
-            this.getOwnerComponent().setModel(oModel, "cageDetails");
-            this.checkKeys.push(this.getView().getModel("routeData").getData().key);
-            var CurrentRouteData = new sap.ui.model.json.JSONModel(this.getView().getModel("routeData").getData());
-            this.getOwnerComponent().setModel(CurrentRouteData, "CurrentRouteData");
-            this.getOwnerComponent().getRouter().navTo("CageDetails");
+            var routeData = this.getView().getModel("routeData").getData();
+
+            // Safety checks
+            const allStations = this._aAllStations || [];
+            const responseItems = res?.value?.items || {};
+
+            // Create a Set of valid cage IDs (fast lookup)
+            const validCageIDs = new Set(
+                allStations
+                    .filter(item => item.ISREADY === "TRUE" && item.STATUS === "Success")
+                    .map(item => item.CAGEID)
+            );
+
+            // Filter res.value.items based on valid cage IDs
+            const filteredItems = Object.fromEntries(
+                Object.entries(responseItems)
+                    .filter(([cageID]) => validCageIDs.has(cageID))
+            );
+
+            // Proceed only if we have valid cages
+            if (Object.keys(filteredItems).length > 0) {
+
+                const filteredResponse = {
+                    ...res.value,
+                    items: filteredItems
+                };
+
+                this.getOwnerComponent().setModel(
+                    new sap.ui.model.json.JSONModel(filteredResponse),
+                    "cageDetails"
+                );
+
+                // Set CurrentRouteData
+                this.getOwnerComponent().setModel(
+                    new sap.ui.model.json.JSONModel(routeData),
+                    "CurrentRouteData"
+                );
+
+                this.getOwnerComponent().getRouter().navTo("CageDetails");
+
+            } else {
+                sap.m.MessageBox.error("No ready and successful cages found.");
+            }
         },
 
         getCageDetails: async function () {
@@ -271,13 +419,13 @@ sap.ui.define([
                 var oLocale = sap.ui.getCore().getConfiguration().getLocale();
                 var lang = oLocale.language;
                 var taskIDs = [];
-                for (var i=0; i < this.getOwnerComponent().getModel("currentRouteCages").getData().length; i++) {
+                for (var i = 0; i < this.getOwnerComponent().getModel("currentRouteCages").getData().length; i++) {
                     taskIDs.push(this.getOwnerComponent().getModel("currentRouteCages").getData()[i].TASKID)
                 }
                 var oPayload = {
                     "TaskIDs": taskIDs
                 };
-                
+
                 $.ajax({
                     url: sUrl,
                     beforeSend: function (xhr) { xhr.setRequestHeader('Accept-Language', lang); },
@@ -289,6 +437,23 @@ sap.ui.define([
                     },
                     success: function (data) {
                         resolve(data);
+                        //palletisation start
+                        var taskIds = [];
+                        var sCagesData = that.getOwnerComponent().getModel("currentRouteCages").getData();
+                        sCagesData.forEach(function (item) {
+                            var payload = {
+                                "Event_Timestamp": null,
+                                "Event_Type": "PALLETISATION_START",
+                                "ID": "",
+                                "Item_ID": "",
+                                "Level": "H",
+                                "PickTask_ID": item.TASKID,
+                                "Quantity": "0",
+                                "User_ID": null
+                            }
+                            that.palletiseEvt(payload);
+                        });
+
 
                     },
                     error: function (error) {

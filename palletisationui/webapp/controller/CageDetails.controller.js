@@ -7,6 +7,9 @@ sap.ui.define([
 
     return Controller.extend("com.sysco.wm.palletisationui.controller.CageDetails", {
         onInit() {
+            var appId = this.getOwnerComponent().getManifestEntry("/sap.app/id");
+            var appPath = appId.replaceAll(".", "/");
+            this.appModulePath = jQuery.sap.getModulePath(appPath);
             var oRouter = this.getOwnerComponent().getRouter();
             oRouter.getRoute("CageDetails").attachPatternMatched(this._onRouteMatched, this);
             this.oBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
@@ -493,7 +496,7 @@ sap.ui.define([
             //this.getOwnerComponent().getModel("cageDetails").setData(data);
             var oModel = this.getOwnerComponent().getModel("cageDetails");
 
-            var oData = oModel.getData().value;
+            var oData = oModel.getData();
             var fData = [];
             var createPalletData = [];
 
@@ -802,7 +805,7 @@ sap.ui.define([
             var oTable = this.byId("table0");
 
             //var cageDetailsData = value;
-            var cageDetailsData = this.getOwnerComponent().getModel("cageDetails").getData().value;
+            var cageDetailsData = this.getOwnerComponent().getModel("cageDetails").getData();
             var noOfPositions = cageDetailsData.MediaType_ID.NoOfPosition; // e.g. 9
             //noOfPositions = 15; // e.g. 9
             // Clear any existing content
@@ -872,7 +875,47 @@ sap.ui.define([
             this._updatePagedData();
         },
 
+        palletiseEvt: function (payload) {
+            var that = this;    
+            var oLocale = sap.ui.getCore().getConfiguration().getLocale();
+            var lang = oLocale.language;
+                var url = that.appModulePath + "/palletiseservices/CloudWM/PalletisingEvents";
+                var oBundle = that.getView().getModel("i18n").getResourceBundle();
+                var sText = "";
+                var sErrorText = "";
+                $.ajax({
+                    url: url,
+                    beforeSend: function (xhr) { xhr.setRequestHeader('Accept-Language', lang); },
+                    type: "POST",
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: JSON.stringify(payload),
+                    success: function (oData, response) {
+    
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(jqXHR.responseText);
+                    }
+                }, this);
+            
+        },
+
+
         onConfirm: function () {
+
+            //palletisation confirm
+                var payload = {
+                "Event_Timestamp": null,
+                "Event_Type": "PALLETISATION_CONFIRMED",
+                "ID": "",
+                "Item_ID": "",
+                "Level": "H",
+                "PickTask_ID": this.getOwnerComponent().getModel("currentRouteCages").getData()[0].TASKID,
+                "Quantity": "" + this._allData[this._currentIndex].TotalQuantity + "",
+                "User_ID": null
+                } 
+                this.palletiseEvt(payload);
+            
             // Move to next record
             var that = this;
             if (this._currentIndex < this._allData.length - 1) {

@@ -375,6 +375,31 @@ sap.ui.define([
             );
         },
 
+        palletiseEvt: function (payload) {
+            var that = this;    
+            var oLocale = sap.ui.getCore().getConfiguration().getLocale();
+            var lang = oLocale.language;
+                var url = this.appModulePath + "/palletiseservices/CloudWM/PalletisingEvents";
+                var oBundle = that.getView().getModel("i18n").getResourceBundle();
+                var sText = "";
+                var sErrorText = "";
+                $.ajax({
+                    url: url,
+                    beforeSend: function (xhr) { xhr.setRequestHeader('Accept-Language', lang); },
+                    type: "POST",
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: JSON.stringify(payload),
+                    success: function (oData, response) {
+    
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(jqXHR.responseText);
+                    }
+                }, this);
+            
+        },
+
         _callNextMarshelling: function (check) {
             return new Promise((resolve, reject) => {
                 var sDest1 = "/palletiseservices/Palletise";
@@ -388,6 +413,8 @@ sap.ui.define([
                 var oLocale = sap.ui.getCore().getConfiguration().getLocale();
                 var lang = oLocale.language;
 
+                var that = this;
+
                 $.ajax({
                     url: sUrl,
                     beforeSend: function (xhr) { xhr.setRequestHeader('Accept-Language', lang); },
@@ -397,6 +424,18 @@ sap.ui.define([
                     },
                     success: function (data) {
                         resolve(data);
+                        //MARSHALLING_AREA_CONFIRMED
+                            var payload = {
+                            "Event_Timestamp": null,
+                            "Event_Type": "MARSHALLING_AREA_CONFIRMED",
+                            "ID": "",
+                            "Item_ID": "",
+                            "Level": "H",
+                            "PickTask_ID": that.getOwnerComponent().getModel("currentRouteCages").getData()[0].TASKID,
+                            "Quantity": "0",
+                            "User_ID": null
+                        } 
+                        that.palletiseEvt(payload);
                     },
                     error: function (error) {
                         reject(error);
