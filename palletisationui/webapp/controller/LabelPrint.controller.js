@@ -443,12 +443,13 @@ sap.ui.define([
 
             for (let cageId in oData.items) {
                 let aCages = oData.items[cageId];
-                aCages.forEach(cage => {
-                    let cageID = cage.CageID;
-                    let ID = cage.ID;
-                    let aItems = cage.To_PickTaskItems || [];
+                //aCages.forEach(cage => {
+                let cageID = aCages.CageID;
+                let ID = aCages.ID;
+                let aItems = aCages.To_PickTaskItems || [];
 
-                    aItems.forEach(item => {
+                aItems.forEach(item => {
+                    if (item.IsPalletable) {
                         aFlattenedData.push({
                             CageID: cageID,
                             Material: item.Material_Material.slice(-6),
@@ -457,16 +458,19 @@ sap.ui.define([
                             PositionInCage: item.PositionInCage,
                             Status: "Success"
                         });
-                    });
-
-                    aItems.forEach(item => {
-                        createPalletData.push({
-                            PickTaskID: ID,
-                            ItemID: item.ItemID,
-
-                        });
-                    });
+                    }
                 });
+
+                aItems.forEach(item => {
+                    if (item.IsPalletable) {
+                        createPalletData.push({
+                        PickTaskID: ID,
+                        ItemID: item.ItemID,
+
+                    });
+                    }
+                });
+                //});
             }
 
             // Create a new model for the flattened data
@@ -520,28 +524,28 @@ sap.ui.define([
         },
 
         palletiseEvt: function (payload) {
-            var that = this;    
+            var that = this;
             var oLocale = sap.ui.getCore().getConfiguration().getLocale();
             var lang = oLocale.language;
-                var url = this.appModulePath + "/palletiseservices/CloudWM/PalletisingEvents";
-                var oBundle = that.getView().getModel("i18n").getResourceBundle();
-                var sText = "";
-                var sErrorText = "";
-                $.ajax({
-                    url: url,
-                    beforeSend: function (xhr) { xhr.setRequestHeader('Accept-Language', lang); },
-                    type: "POST",
-                    contentType: "application/json",
-                    dataType: "json",
-                    data: JSON.stringify(payload),
-                    success: function (oData, response) {
-    
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        console.log(jqXHR.responseText);
-                    }
-                }, this);
-            
+            var url = this.appModulePath + "/palletiseservices/CloudWM/PalletisingEvents";
+            var oBundle = that.getView().getModel("i18n").getResourceBundle();
+            var sText = "";
+            var sErrorText = "";
+            $.ajax({
+                url: url,
+                beforeSend: function (xhr) { xhr.setRequestHeader('Accept-Language', lang); },
+                type: "POST",
+                contentType: "application/json",
+                dataType: "json",
+                data: JSON.stringify(payload),
+                success: function (oData, response) {
+
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(jqXHR.responseText);
+                }
+            }, this);
+
         },
 
         _callCreatePalletService: function () {
@@ -579,8 +583,8 @@ sap.ui.define([
                             "PickTask_ID": data.value.pickTaskID,
                             "Quantity": "0",
                             "User_ID": null
-                            } 
-                            that.palletiseEvt(payload);
+                        }
+                        that.palletiseEvt(payload);
                     },
                     error: function (error) {
                         reject(error);
@@ -596,7 +600,7 @@ sap.ui.define([
                 var sDest1 = "/palletiseservices";
                 var taskId = resultA;
                 var sUrl = this.appModulePath + sDest1 + "/Pick/printLabel(" + "pickTaskID='" + taskId + "')";
-                  var oLocale = sap.ui.getCore().getConfiguration().getLocale();
+                var oLocale = sap.ui.getCore().getConfiguration().getLocale();
                 var lang = oLocale.language;
                 var that = this;
                 $.ajax({
@@ -610,7 +614,7 @@ sap.ui.define([
                         resolve(data);
                         console.log("Print service success result:" + data);
                         //label print
-                            var payload = {
+                        var payload = {
                             "Event_Timestamp": null,
                             "Event_Type": "LABEL_PRINTED",
                             "ID": "",
@@ -619,7 +623,7 @@ sap.ui.define([
                             "PickTask_ID": data.ID,
                             "Quantity": "0",
                             "User_ID": null
-                        } 
+                        }
                         that.palletiseEvt(payload);
                     },
                     error: function (error) {

@@ -446,7 +446,7 @@ sap.ui.define([
 
         gotoRequestJob: async function () {
             var res = await this._callNextMarshelling();
-            this.getOwnerComponent().getRouter().navTo("LabelPrint");
+            this.getOwnerComponent().getRouter().navTo("Home");
         }
     });
 });

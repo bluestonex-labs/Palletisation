@@ -502,32 +502,32 @@ sap.ui.define([
 
             for (let cageId in oData.items) {
                 let aCages = oData.items[cageId];
-                aCages.forEach(cage => {
-                    let cageID = cage.CageID;
-                    let aItems = cage.To_PickTaskItems || [];
+                //aCages.forEach(cage => {
+                let cageID = aCages.CageID;
+                let aItems = aCages.To_PickTaskItems || [];
 
-                    aItems.forEach(item => {
-                        fData.push({
-                            CageID: cageID,
-                            TotalQuantity: parseInt(item.TotalQuantity),
-                            OpenQuantity: parseInt(item.OpenQuantity),
-                            Uom_UnitCode: item.Uom_UnitCode,
-                            PositionInCage: item.PositionInCage,
-                            Status: "None",
-                            Drop: item.Drop,
-                            IsPalletable: item.IsPalletable,
-                            IsCase: item.IsCase,
-                            DenominatorForCase: item.DenominatorForCase,
-                            NumeratorForCase: item.NumeratorForCase,
-                            TotalCase: "",
-                            TotalUnits: "",
-                            PackingBoxRequired: item.PackingBoxRequired,
-                            Cube: item.Cube,
-                            PackBoxType_PackBoxType: item.PackBoxType_PackBoxType,
-                            PackBoxVolume: item.PackBoxVolume
-                        });
+                aItems.forEach(item => {
+                    fData.push({
+                        CageID: cageID,
+                        TotalQuantity: parseInt(item.TotalQuantity),
+                        OpenQuantity: parseInt(item.OpenQuantity),
+                        Uom_UnitCode: item.Uom_UnitCode,
+                        PositionInCage: item.PositionInCage,
+                        Status: "None",
+                        Drop: item.Drop,
+                        IsPalletable: item.IsPalletable,
+                        IsCase: item.IsCase,
+                        DenominatorForCase: item.DenominatorForCase,
+                        NumeratorForCase: item.NumeratorForCase,
+                        TotalCase: "",
+                        TotalUnits: "",
+                        PackingBoxRequired: item.PackingBoxRequired,
+                        Cube: item.Cube,
+                        PackBoxType_PackBoxType: item.PackBoxType_PackBoxType,
+                        PackBoxVolume: item.PackBoxVolume
                     });
                 });
+                //});
             }
 
             this.calculateCasenUnits(fData);
@@ -536,7 +536,7 @@ sap.ui.define([
                 const grouped = items.reduce((acc, item) => {
                     const key = `${item.CageID}-${item.Drop}`;
                     if (!acc[key]) {
-                    acc[key] = new Set();
+                        acc[key] = new Set();
                     }
                     acc[key].add(item.PositionInCage);
                     return acc;
@@ -556,7 +556,7 @@ sap.ui.define([
                     t.Drop === item.Drop &&
                     t.PositionInCage === item.PositionInCage
                 ))
-                );
+            );
             console.log(uniqueInventory);
 
             const newuniqueInventory = uniqueInventory.filter((item, index, self) =>
@@ -564,14 +564,14 @@ sap.ui.define([
                     t.CageID === item.CageID &&
                     t.Drop === item.Drop
                 ))
-                );
+            );
             console.log(newuniqueInventory);
 
             for (var i = 0; i < newuniqueInventory.length; i++) {
                 var currentNewInv = newuniqueInventory[i];
                 for (var j = 0; j < uniqueDrops.length; j++) {
                     var currentDrop = uniqueDrops[j];
-                    if ((currentNewInv.CageID + "-" + currentNewInv.Drop) === currentDrop.key ) {
+                    if ((currentNewInv.CageID + "-" + currentNewInv.Drop) === currentDrop.key) {
                         currentNewInv.concatPositionInCage = currentDrop.uniquePositions.join(", ");
                     }
                 }
@@ -610,7 +610,7 @@ sap.ui.define([
 
                 }
             }*/
-            
+
             var filteredItems = this._allFlatData.filter(item => item.PackingBoxRequired === true);
 
             var hash = Object.create(null), result = [];
@@ -768,7 +768,7 @@ sap.ui.define([
                 } else {
                     flatData[k].TotalPackBoxReq = 0;
                 }
-                
+
             }
         },
 
@@ -871,63 +871,78 @@ sap.ui.define([
                     oTargetText.getItems()[0].addStyleClass("greenCells");
                 }
             }
-            
+
             this._updatePagedData();
         },
 
         palletiseEvt: function (payload) {
-            var that = this;    
+            var that = this;
             var oLocale = sap.ui.getCore().getConfiguration().getLocale();
             var lang = oLocale.language;
-                var url = that.appModulePath + "/palletiseservices/CloudWM/PalletisingEvents";
-                var oBundle = that.getView().getModel("i18n").getResourceBundle();
-                var sText = "";
-                var sErrorText = "";
-                $.ajax({
-                    url: url,
-                    beforeSend: function (xhr) { xhr.setRequestHeader('Accept-Language', lang); },
-                    type: "POST",
-                    contentType: "application/json",
-                    dataType: "json",
-                    data: JSON.stringify(payload),
-                    success: function (oData, response) {
-    
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        console.log(jqXHR.responseText);
-                    }
-                }, this);
-            
+            var url = that.appModulePath + "/palletiseservices/CloudWM/PalletisingEvents";
+            var oBundle = that.getView().getModel("i18n").getResourceBundle();
+            var sText = "";
+            var sErrorText = "";
+            $.ajax({
+                url: url,
+                beforeSend: function (xhr) { xhr.setRequestHeader('Accept-Language', lang); },
+                type: "POST",
+                contentType: "application/json",
+                dataType: "json",
+                data: JSON.stringify(payload),
+                success: function (oData, response) {
+
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(jqXHR.responseText);
+                }
+            }, this);
+
         },
 
 
         onConfirm: function () {
 
-            //palletisation confirm
+            //checking IsPalletable before palletising
+            if (this._allData[this._currentIndex].IsPalletable) {
+                //palletisation confirm
                 var payload = {
-                "Event_Timestamp": null,
-                "Event_Type": "PALLETISATION_CONFIRMED",
-                "ID": "",
-                "Item_ID": "",
-                "Level": "H",
-                "PickTask_ID": this.getOwnerComponent().getModel("currentRouteCages").getData()[0].TASKID,
-                "Quantity": "" + this._allData[this._currentIndex].TotalQuantity + "",
-                "User_ID": null
-                } 
-                this.palletiseEvt(payload);
-            
-            // Move to next record
-            var that = this;
-            if (this._currentIndex < this._allData.length - 1) {
-                this._allData[this._currentIndex].Status = 'Success';
-                this._currentIndex++;
-                if ((this._currentIndex % 5) === 0) {
-                    this.onShowMore();
+                    "Event_Timestamp": null,
+                    "Event_Type": "PALLETISATION_CONFIRMED",
+                    "ID": "",
+                    "Item_ID": "",
+                    "Level": "H",
+                    "PickTask_ID": this.getOwnerComponent().getModel("currentRouteCages").getData()[0].TASKID,
+                    "Quantity": "" + this._allData[this._currentIndex].TotalQuantity + "",
+                    "User_ID": null
                 }
-                this._highlightCurrent();
+                this.palletiseEvt(payload);
+
+                // Move to next record
+                //var that = this;
+                if (this._currentIndex < this._allData.length - 1) {
+                    this._allData[this._currentIndex].Status = 'Success';
+                    this._currentIndex++;
+                    if ((this._currentIndex % 5) === 0) {
+                        this.onShowMore();
+                    }
+                    this._highlightCurrent();
+                } else {
+                    MessageBox.information(
+                        this.oBundle.getText("move_page"),
+                        {
+                            actions: [sap.m.MessageBox.Action.OK],
+                            onClose: function (sAction) {
+                                if (sAction === sap.m.MessageBox.Action.OK) {
+                                    this.getOwnerComponent().getRouter().navTo("LabelPrint");
+                                }
+                            }.bind(this)
+                        }
+                    );
+                }
             } else {
                 MessageBox.information(
-                    that.oBundle.getText("move_page"),
+                    this.oBundle.getText("move_page"),
                     {
                         actions: [sap.m.MessageBox.Action.OK],
                         onClose: function (sAction) {
@@ -937,7 +952,6 @@ sap.ui.define([
                         }.bind(this)
                     }
                 );
-
             }
         },
 
