@@ -507,25 +507,27 @@ sap.ui.define([
                 let aItems = aCages.To_PickTaskItems || [];
 
                 aItems.forEach(item => {
-                    fData.push({
-                        CageID: cageID,
-                        TotalQuantity: parseInt(item.TotalQuantity),
-                        OpenQuantity: parseInt(item.OpenQuantity),
-                        Uom_UnitCode: item.Uom_UnitCode,
-                        PositionInCage: item.PositionInCage,
-                        Status: "None",
-                        Drop: item.Drop,
-                        IsPalletable: item.IsPalletable,
-                        IsCase: item.IsCase,
-                        DenominatorForCase: item.DenominatorForCase,
-                        NumeratorForCase: item.NumeratorForCase,
-                        TotalCase: "",
-                        TotalUnits: "",
-                        PackingBoxRequired: item.PackingBoxRequired,
-                        Cube: item.Cube,
-                        PackBoxType_PackBoxType: item.PackBoxType_PackBoxType,
-                        PackBoxVolume: item.PackBoxVolume
-                    });
+                    if (item.IsPalletable) {
+                        fData.push({
+                            CageID: cageID,
+                            TotalQuantity: parseInt(item.TotalQuantity),
+                            OpenQuantity: parseInt(item.OpenQuantity),
+                            Uom_UnitCode: item.Uom_UnitCode,
+                            PositionInCage: item.PositionInCage,
+                            Status: "None",
+                            Drop: item.Drop,
+                            IsPalletable: item.IsPalletable,
+                            IsCase: item.IsCase,
+                            DenominatorForCase: item.DenominatorForCase,
+                            NumeratorForCase: item.NumeratorForCase,
+                            TotalCase: "",
+                            TotalUnits: "",
+                            PackingBoxRequired: item.PackingBoxRequired,
+                            Cube: item.Cube,
+                            PackBoxType_PackBoxType: item.PackBoxType_PackBoxType,
+                            PackBoxVolume: item.PackBoxVolume
+                        });
+                    }
                 });
                 //});
             }

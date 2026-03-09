@@ -45,6 +45,8 @@ sap.ui.define([
         },
 
         onAfterRendering: function () {
+            //this.getView().byId("prevBtn").getDomRef().blur();
+            //this.getView().byId("nextBtn").getDomRef().blur();
             var printerModel = new sap.ui.model.json.JSONModel({
                 macAddress: "",
                 deviceId: ""
@@ -118,7 +120,7 @@ sap.ui.define([
                         })
                     ],
                     press: this.onStationPress.bind(this)
-                }).addStyleClass("blackButton largeWidth roundCorner");
+                }).addStyleClass("blackButton largeWidth roundCorner mediumButton sapUiSmallMargin");
 
                 oVBox.addItem(oButton);
             }.bind(this));

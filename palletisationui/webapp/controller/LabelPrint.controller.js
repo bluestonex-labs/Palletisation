@@ -464,10 +464,10 @@ sap.ui.define([
                 aItems.forEach(item => {
                     if (item.IsPalletable) {
                         createPalletData.push({
-                        PickTaskID: ID,
-                        ItemID: item.ItemID,
+                            PickTaskID: ID,
+                            ItemID: item.ItemID,
 
-                    });
+                        });
                     }
                 });
                 //});

@@ -63,7 +63,7 @@ sap.ui.define([
                         })
                     ],
                     press: that.onStationListPress.bind(that)
-                }).addStyleClass("blackButton largeWidth roundCorner");
+                }).addStyleClass("blackButton largeWidth roundCorner largeButton customHeight");
 
                 oVBox.addItem(oButton);
 

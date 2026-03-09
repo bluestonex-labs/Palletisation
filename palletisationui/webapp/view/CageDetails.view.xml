@@ -77,7 +77,7 @@
                                     <grid:GridItemLayoutData gridColumn="2 / 4"/>
                                 </layoutData>
                             </Text>
-                            <Button text="{i18n>confirm_next}" type="Transparent" class="roundCorner blackButton largeWidth" press="onConfirm">
+                            <Button text="{i18n>confirm_next}" type="Transparent" class="roundCorner blackButton largeWidth mediumButton" press="onConfirm">
                                 <layoutData>
                                     <grid:GridItemLayoutData gridColumn="2 / 4"/>
                                 </layoutData>

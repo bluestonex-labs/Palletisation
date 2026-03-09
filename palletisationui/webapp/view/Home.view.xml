@@ -40,21 +40,12 @@
                 class="borderLeft"
                 fitContainer="true"
             >
-                <!-- <VBox alignItems="Center" alignContent="Center" justifyContent="Center" fitContainer="true">
-                    <items>
-                        <Button id="B1" class="blackButton largeWidth roundCorner" text="Station 1" icon="sap-icon://add" iconFirst="false" press="goToStationList"/>
-                        <Button id="B2" class="blackButton largeWidth roundCorner" text="Station 2" icon="sap-icon://add" iconFirst="false" press="goToStationList"/>
-                        <Button id="B3" class="blackButton largeWidth roundCorner" text="Station 3" icon="sap-icon://e-care" iconFirst="false" press="goToStationList"/>
-                        <Button id="B4" class="blackButton largeWidth roundCorner" text="Station 4" icon="sap-icon://e-care" iconFirst="false" press="goToStationList"/>
-                        <Button class="roundCorner borderless downArrowBlack" icon="sap-icon://navigation-down-arrow" iconFirst="false"/>
-                    </items>
-                </VBox> -->
 
                 <VBox id="stationButtonsBox" />
-                <HBox justifyContent="Center">
+                <HBox justifyContent="Center" class="sapUiTinyMargin">
                     <Button
                         id="prevBtn"
-                        class="roundCorner borderless upArrowBlack"
+                        class="roundCorner borderless upArrowBlack largeIcon sapUiTinyMarginEnd"
                         icon="sap-icon://navigation-up-arrow"
                         iconFirst="false"
                         press=".onPrevPage"
@@ -62,7 +53,7 @@
                     />
                     <Button
                         id="nextBtn"
-                        class="roundCorner borderless downArrowBlack"
+                        class="roundCorner borderless downArrowBlack largeIcon sapUiTinyMarginBegin"
                         icon="sap-icon://navigation-down-arrow"
                         iconFirst="false"
                         press=".onNextPage"

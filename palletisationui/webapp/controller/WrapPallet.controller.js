@@ -368,7 +368,7 @@ sap.ui.define([
                     actions: [sap.m.MessageBox.Action.OK],
                     onClose: function (sAction) {
                         if (sAction === sap.m.MessageBox.Action.OK) {
-                            that.getOwnerComponent().getRouter().navTo("Home");
+                            that.getOwnerComponent().getRouter().navTo("RouteInfo");
                         }
                     }.bind(that)
                 }
@@ -446,7 +446,7 @@ sap.ui.define([
 
         gotoRequestJob: async function () {
             var res = await this._callNextMarshelling();
-            this.getOwnerComponent().getRouter().navTo("Home");
+            this.getOwnerComponent().getRouter().navTo("RouteInfo");
         }
     });
 });

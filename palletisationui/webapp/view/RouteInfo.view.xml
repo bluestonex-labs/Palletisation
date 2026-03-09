@@ -48,6 +48,7 @@
                             text="{i18n>skip}"
                             class="blackButton roundCorner"
                             press="onSkipPress"
+                            width="100px"
                         />
                     </Toolbar>
                     <ObjectStatus
@@ -103,7 +104,7 @@
                 <HBox justifyContent="Center">
                     <Button
                         id="prevBtn1"
-                        class="roundCorner borderless upArrowBlack"
+                        class="roundCorner borderless upArrowBlack largeIcon"
                         icon="sap-icon://navigation-up-arrow"
                         iconFirst="false"
                         press=".onPrevPage"
@@ -111,7 +112,7 @@
                     />
                     <Button
                         id="nextBtn1"
-                        class="roundCorner borderless downArrowBlack"
+                        class="roundCorner borderless downArrowBlack largeIcon"
                         icon="sap-icon://navigation-down-arrow"
                         iconFirst="false"
                         press=".onNextPage"
@@ -153,7 +154,7 @@
                         <Button
                             id="palletizeBtn"
                             text="{i18n>palletize}"
-                            class="blackButton largeWidth roundCorner"
+                            class="blackButton largeWidth roundCorner largeButton"
                             enabled="false"
                             press="onPalletise"
                         />

@@ -2,14 +2,6 @@
     <Page title="{i18n>title}" showHeader="false" showFooter="false">
         <HBox width="100vw" fitContainer="true" visible="true" class="twoRemPadding">
             <VBox width="70%" height="auto" class="borderRight" fitContainer="true">
-                <!--<VBox width="100%" alignContent="Center" alignItems="Start" class="cageVBoxMarginLeft" fitContainer="true">
-                    <Toolbar design="Transparent" style="Clear" width="100%" class="marginLeftToolbar">
-                        <Title id="titleRoute1" text=""/>
-                        <ToolbarSpacer width="7rem"/>
-                        <Button text="{i18n>skip}" class="blackButton roundCorner" visible="false"/>
-                    </Toolbar>
-                    <ObjectStatus state="Success" text="{i18n>open}" class="customBeginMargin"/>
-                </VBox>-->
                 <HBox>
                         <items>
                             <Title id="titleRoute1" text="" class="sapUiTinyMargin"/>
@@ -18,9 +10,6 @@
                         </items>
                     </HBox>
                     <Button text="{i18n>skip}" class="blackButton roundCorner" visible="false"/>
-                <!--<HBox width="100%" alignContent="Start" alignItems="Start" class="sapUiTinyMargin cageVBoxMarginLeft" fitContainer="true">
-                    <Label id="LabelRoute1" text=""/>
-                </HBox>-->
                 <Table id="cageList1" items="{                                 path: 'flattened>/visibleResults'                                 }" inset="false" mode="None">
                    <columns>
                             <Column>
@@ -58,19 +47,19 @@
                 </Table>
                 <HBox justifyContent="Center">
                     <!-- Up Arrow -->
-                    <Button id="btnUp1" icon="sap-icon://navigation-up-arrow" type="Transparent" press=".onShowLess" visible="false"/>
+                    <Button id="btnUp1" icon="sap-icon://navigation-up-arrow" class="roundCorner borderless upArrowBlack largeIcon" type="Transparent" press=".onShowLess" visible="false"/>
                     <!-- hidden initially -->
 
                     <!-- Down Arrow -->
-                    <Button id="btnDown1" icon="sap-icon://navigation-down-arrow" type="Transparent" press=".onShowMore"/>
+                    <Button id="btnDown1" icon="sap-icon://navigation-down-arrow" class="roundCorner borderless downArrowBlack largeIcon" type="Transparent" press=".onShowMore"/>
                 </HBox>
             </VBox>
-            <VBox width="30%" height="auto" alignItems="Center" alignContent="Center" justifyContent="Center" class="borderLeft" visible="true" fitContainer="true">
+            <VBox width="30%" height="auto" alignItems="Center" alignContent="Center" justifyContent="Center" class="borderLeft customPadding" visible="true" fitContainer="true">
                 <VBox alignItems="Start">
                     <items>
-                        <Button text="{i18n>print}" class="blackButton largeWidth roundCorner" press="onPrint"/>
-                        <Button text="{i18n>next_pallet}" class="blackButton largeWidth roundCorner" press="nextPallet"/>
-                        <Button text="{i18n>next_route}" class="blackButton largeWidth roundCorner" enabled="false"/>
+                        <Button text="{i18n>print}" class="blackButton largeWidth roundCorner mediumButton customHeightLabelPrint" press="onPrint"/>
+                        <Button text="{i18n>next_pallet}" class="blackButton largeWidth roundCorner mediumButton customHeightLabelPrint" press="nextPallet"/>
+                        <Button text="{i18n>next_route}" class="blackButton largeWidth roundCorner mediumButton customHeightLabelPrint" enabled="false"/>
                     </items>
                 </VBox>
             </VBox>

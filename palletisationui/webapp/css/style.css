@@ -25,6 +25,10 @@
     color: black !important;
     font-size: 1.375rem !important;
 }
+.upArrowBlack .sapMBtnIcon {
+    color: black !important;
+    font-size: 1.375rem !important;
+}
 .customBeginMargin {
     margin-left: 0.8rem !important;
 }
@@ -71,4 +75,30 @@
 
 .duplicatePosition{
     background-color: yellow !important;
+}
+
+.mediumButton .sapMBtnInner {
+    height: 45px !important;
+    padding-top: 4px !important
+}
+
+.largeButton .sapMBtnInner {
+    height: 100px !important;
+    padding-top: 30px !important
+}
+
+.customHeight {
+    height: 100px !important;
+}
+
+.largeIcon .sapMBtnIcon {
+    font-size: 3rem !important;
+}
+
+.customHeightLabelPrint {
+    height: 80px !important;
+}
+
+.customPadding {
+    padding-top: 55px !important;
 }
