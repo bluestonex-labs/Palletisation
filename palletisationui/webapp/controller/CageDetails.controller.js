@@ -636,9 +636,8 @@ sap.ui.define([
             }
 
             var aFlattenedData = finalArray;
-            /*for (var x = 0; x < finalArray.length; x++) {
-                aFlattenedData.push(finalArray[x].items[0]);
-            }*/
+            //SOM 620 - sort by drop desc
+            aFlattenedData.sort((a, b) => b.Drop - a.Drop);
 
             this.sumForCasenUnitForEachDrop(this._allFlatData, aFlattenedData);
             this.calculatePackBoxes(aFlattenedData);
