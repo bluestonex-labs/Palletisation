@@ -20,6 +20,7 @@ sap.ui.define([
             this._pageSize = 5;
             this._currentPage = 0;
             this._currentIndex = 0;
+            this._currentPosition = 0;
             var aSelectedRecord = this.getOwnerComponent().getModel("selectedRecord").getData();
             this.getView().byId("cageTitle").setText(aSelectedRecord.Description);
             this.getView().byId("LabelRoute").setText(this.getOwnerComponent().getModel("CurrentRouteData").getData().key);
@@ -28,481 +29,15 @@ sap.ui.define([
         },
 
         _createDynamicTable1: function () {
-            // Suppose you already have your data model set
 
-            /*var data = {
-                "@odata.context": "$metadata#Edm.String",
-                "value": {
-                    "items": {
-                        "027": [
-                            {
-                                "CageID": "027",
-                                "DeliveryDate": "2025-11-27",
-                                "ID": "PICK_730",
-                                "IsShort": false,
-                                "MHEType_ID": null,
-                                "MediaPlacement": 1,
-                                "MediaType_ID": "2",
-                                "Media_ID": "CA",
-                                "NoOfPackingBoxRequired": 2,
-                                "NominalWeight": "180.198",
-                                "PalletID": null,
-                                "PickJob": "E2E943009545D4AA1900297AB0C7639F",
-                                "PickType_ID": "MT",
-                                "PickerUserID": "FRSERPETAS",
-                                "Plant_Plant": "BR10",
-                                "Route": "T44127",
-                                "Sequence": 3,
-                                "Status_ID": "INPROGRESS",
-                                "Temperature_ID": "Frozen",
-                                "TotalCube": "492.369",
-                                "PickType": {
-                                    "Description": "Multi Pick",
-                                    "ID": "MT"
-                                },
-                                "MediaType": {
-                                    "ID": "2",
-                                    "MaximumWeightMulti": "600.000",
-                                    "MultiCubeMax": "1183.200",
-                                    "NoOfPosition": 9
-                                },
-                                "Media": {
-                                    "Description": "Cage",
-                                    "ID": "CA"
-                                },
-                                "Plant": {
-                                    "Description": "BRUGUIERES",
-                                    "Plant": "BR10"
-                                },
-                                "Status": {
-                                    "Description": "In Progress",
-                                    "ID": "INPROGRESS"
-                                },
-                                "Temperature": {
-                                    "Description": "Frozen",
-                                    "ID": "Frozen"
-                                },
-                                "To_PickTaskItems": [
-                                    {
-                                        "ActualWeight": null,
-                                        "Cube": "26.007",
-                                        "Drop": 120,
-                                        "ItemID": "6f57f0ae-a921-49b6-a272-6f8a434970f7",
-                                        "Material_Material": "000000000000035558",
-                                        "NominalWeight": "9.000",
-                                        "OpenQuantity": "0.000",
-                                        "PositionInCage": 1,
-                                        "ShipTo": "0000788657",
-                                        "Status_ID": "COMPLETED",
-                                        "TotalQuantity": "3.000",
-                                        "Uom_UnitCode": "CT",
-                                        "Warehouse_WarehouseNumber": "BR1",
-                                        "Material": {
-                                            "Material": "000000000000035558",
-                                            "MaterialDescription": "FLT ROUGET BARB.QSA 20/40G CT3KG"
-                                        },
-                                        "Status": {
-                                            "Description": "Complete Full",
-                                            "ID": "COMPLETED"
-                                        },
-                                        "Warehouse": {
-                                            "WarehouseNumber": "BR1",
-                                            "WhseNoDescr": "Chilled Opp. Warehouse"
-                                        },
-                                        "IsPalletable": true
-                                    },
-                                    {
-                                        "ActualWeight": null,
-                                        "Cube": "45.264",
-                                        "Drop": 120,
-                                        "ItemID": "20d88511-092b-494c-a4bb-3be856ebbe50",
-                                        "Material_Material": "000000000000073200",
-                                        "NominalWeight": "20.000",
-                                        "OpenQuantity": "0.000",
-                                        "PositionInCage": 2,
-                                        "ShipTo": "0000788657",
-                                        "Status_ID": "COMPLETED",
-                                        "TotalQuantity": "4.000",
-                                        "Uom_UnitCode": "CT",
-                                        "Warehouse_WarehouseNumber": "BR1",
-                                        "Material": {
-                                            "Material": "000000000000073200",
-                                            "MaterialDescription": "AIGUIL.PLT PANEE CORN-FL.HALAL ST1KG X5"
-                                        },
-                                        "Status": {
-                                            "Description": "Complete Full",
-                                            "ID": "COMPLETED"
-                                        },
-                                        "Warehouse": {
-                                            "WarehouseNumber": "BR1",
-                                            "WhseNoDescr": "Chilled Opp. Warehouse"
-                                        },
-                                        "IsPalletable": true
-                                    },
-                                    {
-                                        "ActualWeight": null,
-                                        "Cube": "14.756",
-                                        "Drop": 120,
-                                        "ItemID": "2b363893-1d0c-4e78-af8d-10524ea5f8e2",
-                                        "Material_Material": "000000000000076756",
-                                        "NominalWeight": "5.118",
-                                        "OpenQuantity": "0.000",
-                                        "PositionInCage": 2,
-                                        "ShipTo": "0000788657",
-                                        "Status_ID": "COMPLETED",
-                                        "TotalQuantity": "2.000",
-                                        "Uom_UnitCode": "BC",
-                                        "Warehouse_WarehouseNumber": "BR1",
-                                        "Material": {
-                                            "Material": "000000000000076756",
-                                            "MaterialDescription": "C/G CHOCOLAT NESTLE BC2.56KG-5L"
-                                        },
-                                        "Status": {
-                                            "Description": "Complete Full",
-                                            "ID": "COMPLETED"
-                                        },
-                                        "Warehouse": {
-                                            "WarehouseNumber": "BR1",
-                                            "WhseNoDescr": "Chilled Opp. Warehouse"
-                                        },
-                                        "IsPalletable": true
-                                    },
-                                    {
-                                        "ActualWeight": null,
-                                        "Cube": "10.097",
-                                        "Drop": 90,
-                                        "ItemID": "d94edb1a-0f0c-4bf3-8edd-79f04dcea182",
-                                        "Material_Material": "000000000000077471",
-                                        "NominalWeight": "4.000",
-                                        "OpenQuantity": "0.000",
-                                        "PositionInCage": 2,
-                                        "ShipTo": "0000760740",
-                                        "Status_ID": "COMPLETED",
-                                        "TotalQuantity": "1.000",
-                                        "Uom_UnitCode": "CT",
-                                        "Warehouse_WarehouseNumber": "BR1",
-                                        "Material": {
-                                            "Material": "000000000000077471",
-                                            "MaterialDescription": "GRATINE SAVOYARDE 130G ENV.SYC CT4KG"
-                                        },
-                                        "Status": {
-                                            "Description": "Complete Full",
-                                            "ID": "COMPLETED"
-                                        },
-                                        "Warehouse": {
-                                            "WarehouseNumber": "BR1",
-                                            "WhseNoDescr": "Chilled Opp. Warehouse"
-                                        },
-                                        "IsPalletable": true
-                                    },
-                                    {
-                                        "ActualWeight": null,
-                                        "Cube": "18.050",
-                                        "Drop": 90,
-                                        "ItemID": "8265b4b6-44bc-4c6f-a4af-a8c5cc196d3d",
-                                        "Material_Material": "000000000000076109",
-                                        "NominalWeight": "10.000",
-                                        "OpenQuantity": "0.000",
-                                        "PositionInCage": 2,
-                                        "ShipTo": "0000760740",
-                                        "Status_ID": "COMPLETED",
-                                        "TotalQuantity": "1.000",
-                                        "Uom_UnitCode": "CT",
-                                        "Warehouse_WarehouseNumber": "BR1",
-                                        "Material": {
-                                            "Material": "000000000000076109",
-                                            "MaterialDescription": "CAROTTE PARISIENNE SYC ST2.5KG X4"
-                                        },
-                                        "Status": {
-                                            "Description": "Complete Full",
-                                            "ID": "COMPLETED"
-                                        },
-                                        "Warehouse": {
-                                            "WarehouseNumber": "BR1",
-                                            "WhseNoDescr": "Chilled Opp. Warehouse"
-                                        },
-                                        "IsPalletable": true
-                                    },
-                                    {
-                                        "ActualWeight": null,
-                                        "Cube": "11.520",
-                                        "Drop": 60,
-                                        "ItemID": "2416a97c-48a5-4fc4-b3ed-30972030c2f5",
-                                        "Material_Material": "000000000000074916",
-                                        "NominalWeight": "6.000",
-                                        "OpenQuantity": "0.000",
-                                        "PositionInCage": 3,
-                                        "ShipTo": "0000419871",
-                                        "Status_ID": "COMPLETED",
-                                        "TotalQuantity": "6.000",
-                                        "Uom_UnitCode": "ST",
-                                        "Warehouse_WarehouseNumber": "BR1",
-                                        "Material": {
-                                            "Material": "000000000000074916",
-                                            "MaterialDescription": "PUREE AVOCAT IQF ST1KG X10"
-                                        },
-                                        "Status": {
-                                            "Description": "Complete Full",
-                                            "ID": "COMPLETED"
-                                        },
-                                        "Warehouse": {
-                                            "WarehouseNumber": "BR1",
-                                            "WhseNoDescr": "Chilled Opp. Warehouse"
-                                        },
-                                        "IsPalletable": true
-                                    },
-                                    {
-                                        "ActualWeight": null,
-                                        "Cube": "33.572",
-                                        "Drop": 60,
-                                        "ItemID": "74dc2f76-6e7c-4d71-80c5-823fbcde7165",
-                                        "Material_Material": "000000000000071593",
-                                        "NominalWeight": "10.000",
-                                        "OpenQuantity": "0.000",
-                                        "PositionInCage": 3,
-                                        "ShipTo": "0000419871",
-                                        "Status_ID": "COMPLETED",
-                                        "TotalQuantity": "2.000",
-                                        "Uom_UnitCode": "CT",
-                                        "Warehouse_WarehouseNumber": "BR1",
-                                        "Material": {
-                                            "Material": "000000000000071593",
-                                            "MaterialDescription": "HAR.V XFIN BKE CE2 ST2.5KG X2"
-                                        },
-                                        "Status": {
-                                            "Description": "Complete Full",
-                                            "ID": "COMPLETED"
-                                        },
-                                        "Warehouse": {
-                                            "WarehouseNumber": "BR1",
-                                            "WhseNoDescr": "Chilled Opp. Warehouse"
-                                        },
-                                        "IsPalletable": true
-                                    },
-                                    {
-                                        "ActualWeight": null,
-                                        "Cube": "33.572",
-                                        "Drop": 60,
-                                        "ItemID": "37ee7484-0f7f-4952-9c9c-19bdd054b483",
-                                        "Material_Material": "000000000000071593",
-                                        "NominalWeight": "10.000",
-                                        "OpenQuantity": "0.000",
-                                        "PositionInCage": 4,
-                                        "ShipTo": "0000419871",
-                                        "Status_ID": "COMPLETED",
-                                        "TotalQuantity": "2.000",
-                                        "Uom_UnitCode": "CT",
-                                        "Warehouse_WarehouseNumber": "BR1",
-                                        "Material": {
-                                            "Material": "000000000000071593",
-                                            "MaterialDescription": "HAR.V XFIN BKE CE2 ST2.5KG X2"
-                                        },
-                                        "Status": {
-                                            "Description": "Complete Full",
-                                            "ID": "COMPLETED"
-                                        },
-                                        "Warehouse": {
-                                            "WarehouseNumber": "BR1",
-                                            "WhseNoDescr": "Chilled Opp. Warehouse"
-                                        },
-                                        "IsPalletable": true
-                                    },
-                                    {
-                                        "ActualWeight": null,
-                                        "Cube": "4.256",
-                                        "Drop": 60,
-                                        "ItemID": "a9363c45-380c-4335-a7a8-9f329568a89e",
-                                        "Material_Material": "000000000000035302",
-                                        "NominalWeight": "2.000",
-                                        "OpenQuantity": "0.000",
-                                        "PositionInCage": 3,
-                                        "ShipTo": "0000419871",
-                                        "Status_ID": "COMPLETED",
-                                        "TotalQuantity": "1.000",
-                                        "Uom_UnitCode": "BT",
-                                        "Warehouse_WarehouseNumber": "BR1",
-                                        "Material": {
-                                            "Material": "000000000000035302",
-                                            "MaterialDescription": "CREVETTE SAUV ENT.CRUE C/T 10-20 BT2KGX6"
-                                        },
-                                        "Status": {
-                                            "Description": "Complete Full",
-                                            "ID": "COMPLETED"
-                                        },
-                                        "Warehouse": {
-                                            "WarehouseNumber": "BR1",
-                                            "WhseNoDescr": "Chilled Opp. Warehouse"
-                                        },
-                                        "IsPalletable": true
-                                    },
-                                    {
-                                        "ActualWeight": null,
-                                        "Cube": "25.536",
-                                        "Drop": 60,
-                                        "ItemID": "dfb0c291-0168-4976-8c83-b6a000bcaace",
-                                        "Material_Material": "000000000000035302",
-                                        "NominalWeight": "12.000",
-                                        "OpenQuantity": "0.000",
-                                        "PositionInCage": 4,
-                                        "ShipTo": "0000419871",
-                                        "Status_ID": "COMPLETED",
-                                        "TotalQuantity": "6.000",
-                                        "Uom_UnitCode": "BT",
-                                        "Warehouse_WarehouseNumber": "BR1",
-                                        "Material": {
-                                            "Material": "000000000000035302",
-                                            "MaterialDescription": "CREVETTE SAUV ENT.CRUE C/T 10-20 BT2KGX6"
-                                        },
-                                        "Status": {
-                                            "Description": "Complete Full",
-                                            "ID": "COMPLETED"
-                                        },
-                                        "Warehouse": {
-                                            "WarehouseNumber": "BR1",
-                                            "WhseNoDescr": "Chilled Opp. Warehouse"
-                                        },
-                                        "IsPalletable": true
-                                    },
-                                    {
-                                        "ActualWeight": null,
-                                        "Cube": "33.208",
-                                        "Drop": 30,
-                                        "ItemID": "77f78419-d686-4c9c-8836-0b7511194392",
-                                        "Material_Material": "000000000000075157",
-                                        "NominalWeight": "5.040",
-                                        "OpenQuantity": "0.000",
-                                        "PositionInCage": 5,
-                                        "ShipTo": "0005165567",
-                                        "Status_ID": "COMPLETED",
-                                        "TotalQuantity": "7.000",
-                                        "Uom_UnitCode": "CT",
-                                        "Warehouse_WarehouseNumber": "BR1",
-                                        "Material": {
-                                            "Material": "000000000000075157",
-                                            "MaterialDescription": "MINI BABA RHUM 15G ENV.BKE X48"
-                                        },
-                                        "Status": {
-                                            "Description": "Complete Full",
-                                            "ID": "COMPLETED"
-                                        },
-                                        "Warehouse": {
-                                            "WarehouseNumber": "BR1",
-                                            "WhseNoDescr": "Chilled Opp. Warehouse"
-                                        },
-                                        "IsPalletable": true
-                                    },
-                                    {
-                                        "ActualWeight": null,
-                                        "Cube": "65.080",
-                                        "Drop": 30,
-                                        "ItemID": "0342009b-33b2-4c5b-8a89-585156c629bf",
-                                        "Material_Material": "000000000000077791",
-                                        "NominalWeight": "14.400",
-                                        "OpenQuantity": "0.000",
-                                        "PositionInCage": 5,
-                                        "ShipTo": "0005165567",
-                                        "Status_ID": "COMPLETED",
-                                        "TotalQuantity": "8.000",
-                                        "Uom_UnitCode": "CT",
-                                        "Warehouse_WarehouseNumber": "BR1",
-                                        "Material": {
-                                            "Material": "000000000000077791",
-                                            "MaterialDescription": "FONDANT CHOC. SYC 90GX20 stockage -18°C"
-                                        },
-                                        "Status": {
-                                            "Description": "Complete Full",
-                                            "ID": "COMPLETED"
-                                        },
-                                        "Warehouse": {
-                                            "WarehouseNumber": "BR1",
-                                            "WhseNoDescr": "Chilled Opp. Warehouse"
-                                        },
-                                        "IsPalletable": true
-                                    },
-                                    {
-                                        "ActualWeight": null,
-                                        "Cube": "9.662",
-                                        "Drop": 30,
-                                        "ItemID": "920d44ff-166d-40d1-8c56-147296434497",
-                                        "Material_Material": "000000000000076568",
-                                        "NominalWeight": "1.320",
-                                        "OpenQuantity": "0.000",
-                                        "PositionInCage": 5,
-                                        "ShipTo": "0005165567",
-                                        "Status_ID": "COMPLETED",
-                                        "TotalQuantity": "2.000",
-                                        "Uom_UnitCode": "CT",
-                                        "Warehouse_WarehouseNumber": "BR1",
-                                        "Material": {
-                                            "Material": "000000000000076568",
-                                            "MaterialDescription": "CITRON GIVRE 110G-165ML NESTLE CT6PC"
-                                        },
-                                        "Status": {
-                                            "Description": "Complete Full",
-                                            "ID": "COMPLETED"
-                                        },
-                                        "Warehouse": {
-                                            "WarehouseNumber": "BR1",
-                                            "WhseNoDescr": "Chilled Opp. Warehouse"
-                                        },
-                                        "IsPalletable": true
-                                    },
-                                    {
-                                        "ActualWeight": null,
-                                        "Cube": "9.662",
-                                        "Drop": 30,
-                                        "ItemID": "937fd23d-7cba-4ed5-92ba-6c42fed1f73c",
-                                        "Material_Material": "000000000000076568",
-                                        "NominalWeight": "1.320",
-                                        "OpenQuantity": "0.000",
-                                        "PositionInCage": 6,
-                                        "ShipTo": "0005165567",
-                                        "Status_ID": "COMPLETED",
-                                        "TotalQuantity": "2.000",
-                                        "Uom_UnitCode": "CT",
-                                        "Warehouse_WarehouseNumber": "BR1",
-                                        "Material": {
-                                            "Material": "000000000000076568",
-                                            "MaterialDescription": "CITRON GIVRE 110G-165ML NESTLE CT6PC"
-                                        },
-                                        "Status": {
-                                            "Description": "Complete Full",
-                                            "ID": "COMPLETED"
-                                        },
-                                        "Warehouse": {
-                                            "WarehouseNumber": "BR1",
-                                            "WhseNoDescr": "Chilled Opp. Warehouse"
-                                        },
-                                        "IsPalletable": true
-                                    }
-                                ],
-                                "To_Marshalling": {
-                                    "LastDrop": 120
-                                }
-                            }
-                        ]
-                    },
-                    "totalCube": 340.24199999999996,
-                    "totalWeight": 110.198,
-                    "MediaType_ID": {
-                        "ID": "2",
-                        "MaximumWeightMulti": "600.000",
-                        "MultiCubeMax": "1183.200",
-                        "NoOfPosition": 9
-                    }
-                }
-            };*/
-
-            //this.getOwnerComponent().getModel("cageDetails").setData(data);
             var oModel = this.getOwnerComponent().getModel("cageDetails");
-
             var oData = oModel.getData();
-            var fData = [];
-            var createPalletData = [];
 
+            var fData = [];
+
+            // Step 1: Flatten oData.value.items
             for (let cageId in oData.items) {
                 let aCages = oData.items[cageId];
-                //aCages.forEach(cage => {
                 let cageID = aCages.CageID;
                 let aItems = aCages.To_PickTaskItems || [];
 
@@ -518,21 +53,21 @@ sap.ui.define([
                             Drop: item.Drop,
                             IsPalletable: item.IsPalletable,
                             IsCase: item.IsCase,
+                            ItemID: item.ItemID,
                             DenominatorForCase: item.DenominatorForCase,
                             NumeratorForCase: item.NumeratorForCase,
                             TotalCase: "",
                             TotalUnits: "",
+                            TotalPackBoxReq: 0,
                             PackingBoxRequired: item.PackingBoxRequired,
-                            Cube: item.Cube,
+                            Cube: parseFloat(item.Cube),
                             PackBoxType_PackBoxType: item.PackBoxType_PackBoxType,
-                            PackBoxVolume: item.PackBoxVolume
+                            PackBoxVolume: item.PackBoxVolume ? parseFloat(item.PackBoxVolume) : null
                         });
                     }
                 });
-                //});
             }
 
-            this.calculateCasenUnits(fData);
             this._allFlatData = fData;
             const getUniquePositions = (items) => {
                 const grouped = items.reduce((acc, item) => {
@@ -544,7 +79,6 @@ sap.ui.define([
                     return acc;
                 }, {});
 
-                // Convert Sets back to Arrays for final output
                 return Object.keys(grouped).map(key => ({
                     key,
                     uniquePositions: Array.from(grouped[key])
@@ -552,25 +86,8 @@ sap.ui.define([
             }
             var uniqueDrops = getUniquePositions(this._allFlatData);
 
-            const uniqueInventory = this._allFlatData.filter((item, index, self) =>
-                index === self.findIndex((t) => (
-                    t.CageID === item.CageID &&
-                    t.Drop === item.Drop &&
-                    t.PositionInCage === item.PositionInCage
-                ))
-            );
-            console.log(uniqueInventory);
-
-            const newuniqueInventory = uniqueInventory.filter((item, index, self) =>
-                index === self.findIndex((t) => (
-                    t.CageID === item.CageID &&
-                    t.Drop === item.Drop
-                ))
-            );
-            console.log(newuniqueInventory);
-
-            for (var i = 0; i < newuniqueInventory.length; i++) {
-                var currentNewInv = newuniqueInventory[i];
+            for (var i = 0; i < this._allFlatData.length; i++) {
+                var currentNewInv = this._allFlatData[i];
                 for (var j = 0; j < uniqueDrops.length; j++) {
                     var currentDrop = uniqueDrops[j];
                     if ((currentNewInv.CageID + "-" + currentNewInv.Drop) === currentDrop.key) {
@@ -579,114 +96,89 @@ sap.ui.define([
                 }
             }
 
-            console.log(newuniqueInventory);
-            var finalArray = Object.values(newuniqueInventory);
+            // Step 2: Calculate totalCasenUnits
+            for (var i = 0; i < this._allFlatData.length; i++) {
+                var cases = 0;
+                var units = 0;
+                var total = 0;
 
-            /*const groupedObject = newuniqueInventory.reduce((accumulator, currentItem) => {
-                if (!accumulator[currentItem.CageID]) {
-                    accumulator[currentItem.CageID] = {
-                        Drop: currentItem.CageID,
+                if (this._allFlatData[i].IsCase) {
+                    cases = ((this._allFlatData[i].TotalQuantity - this._allFlatData[i].OpenQuantity) * parseInt(this._allFlatData[i].DenominatorForCase)) % parseInt(this._allFlatData[i].NumeratorForCase);
+                    units = Math.trunc(((this._allFlatData[i].TotalQuantity - this._allFlatData[i].OpenQuantity) * parseInt(this._allFlatData[i].DenominatorForCase)) / parseInt(this._allFlatData[i].NumeratorForCase));
+                    total = cases + units;
+                } else {
+                    total = this._allFlatData[i].TotalQuantity - this._allFlatData[i].OpenQuantity;
+                }
+
+                this._allFlatData[i].totalCasenUnits = total;
+            }
+
+            // Step 3: Calculate TotalPackBoxReq
+            for (var i = 0; i < this._allFlatData.length; i++) {
+                if (this._allFlatData[i].PackBoxVolume && this._allFlatData[i].PackBoxVolume > 0) {
+                    this._allFlatData[i].TotalPackBoxReq = Math.ceil(this._allFlatData[i].Cube / this._allFlatData[i].PackBoxVolume);
+                } else {
+                    this._allFlatData[i].TotalPackBoxReq = 0;
+                }
+            }
+
+            var aFlattenedData = this._allFlatData;
+            //SOM 620 - sort by drop desc
+            aFlattenedData.sort((a, b) => b.Drop - a.Drop);
+
+            var groupedData = {};
+
+            this._allFlatData.forEach(item => {
+                let key = `${item.CageID}_${item.Drop}`;
+                if (!groupedData[key]) {
+                    groupedData[key] = {
+                        CageID: item.CageID,
+                        Drop: item.Drop,
+                        totalCasenUnits: 0,
                         items: []
                     };
                 }
-                accumulator[currentItem.CageID].items.push(currentItem);
-                return accumulator;
-            }, {});
+                groupedData[key].items.push(item);
+                groupedData[key].totalCasenUnits += item.totalCasenUnits;
+            });
 
-            const finalArray = Object.values(groupedObject);
-            finalArray.sort((a, b) => b.Drop - a.Drop);
+            // Convert groupedData to array
+            var result = Object.values(groupedData);
 
-            for (var i = 0; i < finalArray.length; i++) {
-                var currentDropItems = finalArray[i];
+            for (var i = 0; i < result.length; i++) {
+                var currentDropItems = result[i];
                 for (var j = 0; j < currentDropItems.items.length; j++) {
 
                     if (j === 0) {
                         currentDropItems.items[0].concatPositionInCage = currentDropItems.items[0].PositionInCage;
+                        currentDropItems.items[0].sumTotalPackBoxReq = currentDropItems.items[0].TotalPackBoxReq;
                     }
 
                     if (currentDropItems.Drop === currentDropItems.items[j].Drop && j > 0) {
                         if (!(currentDropItems.items[0].concatPositionInCage).toString().includes(currentDropItems.items[j].PositionInCage.toString())) {
                             currentDropItems.items[0].concatPositionInCage = currentDropItems.items[0].concatPositionInCage + ", " + currentDropItems.items[j].PositionInCage;
                         }
+                        currentDropItems.items[0].sumTotalPackBoxReq = currentDropItems.items[0].sumTotalPackBoxReq + currentDropItems.items[j].TotalPackBoxReq;
                     }
 
-                }
-            }*/
-
-            var filteredItems = this._allFlatData.filter(item => item.PackingBoxRequired === true);
-
-            var hash = Object.create(null), result = [];
-            filteredItems.forEach(function (o) {
-                if (!hash[o.Drop]) {
-                    hash[o.Drop] = { Drop: o.Drop, PackBoxType: o.PackBoxType_PackBoxType, Cube: 0 };
-                    result.push(hash[o.Drop]);
-                }
-                hash[o.Drop].Cube += +o.Cube;
-            });
-            console.log(result);
-
-            for (var x = 0; x < result.length; x++) {
-                var currentResult = result[x];
-                for (var y = 0; y < finalArray.length; y++) {
-                    var currentArray = finalArray[y];
-                    if (currentResult.Drop === currentArray.Drop && currentResult.PackBoxType === currentArray.PackBoxType_PackBoxType) {
-                        currentArray.Cube = currentResult.Cube;
-                    }
                 }
             }
 
-            var aFlattenedData = finalArray;
+            var filteredItems = [];
+            for (var i = 0; i < result.length; i++) {
+                result[i].items[0].FinalTotal = result[i].totalCasenUnits;
+                filteredItems.push(result[i].items.slice(0, 1)[0]);
+            }
+
+            var aFlattenedData = filteredItems;
             //SOM 620 - sort by drop desc
             aFlattenedData.sort((a, b) => b.Drop - a.Drop);
-
-            this.sumForCasenUnitForEachDrop(this._allFlatData, aFlattenedData);
-            this.calculatePackBoxes(aFlattenedData);
 
             var oFlatModel = new sap.ui.model.json.JSONModel({ results: aFlattenedData });
             this.getView().setModel(oFlatModel, "flattened");
             this._allData = aFlattenedData;
             this._updatePagedData();
-        },
 
-        groupAndSortDetails: function (data) {
-            // 1. Group by Id and then by drop
-            const groupedData = data.reduce((acc, item) => {
-                // Group by Id
-                if (!acc[item.CageID]) {
-                    acc[item.CageID] = {};
-                }
-                // Group by drop within the Id group
-                if (!acc[item.CageID][item.Drop]) {
-                    acc[item.CageID][item.Drop] = [];
-                }
-                acc[item.CageID][item.Drop].push(item);
-                return acc;
-            }, {});
-
-            // 2. Sort the final structure in descending order
-            // Convert the nested object into an array of objects for sorting and easier consumption
-            const result = Object.keys(groupedData).map(CageID => {
-                const Drops = Object.keys(groupedData[CageID]).map(Drop => ({
-                    Drop,
-                    details: groupedData[CageID][Drop]
-                }));
-                return {
-                    CageID: CageID,
-                    Drop: Drops
-                };
-            });
-
-            // Sort the top-level array (by Id in descending order)
-            // Note: for strings, localeCompare is better, for numbers, b - a.
-            // Assuming Id is a string for this example.
-            result.sort((a, b) => b.CageID.localeCompare(a.CageID));
-
-            // Optional: sort the drops within each Id group (e.g., by drop name descending)
-            result.forEach(item => {
-                item.Drop.sort((a, b) => b.Drop.localeCompare(a.Drop));
-            });
-
-            return result;
         },
 
         _updatePagedData: function () {
@@ -702,89 +194,75 @@ sap.ui.define([
             this.getView().byId("btnDown").setVisible(end < this._allData.length);
         },
 
-        highlightSamePosition: function () {
+        highlightSamePosition: function (cageID) {
+            this._aPositionTexts.forEach(oText => {
+                oText.removeStyleClass("duplicatePosition");
+            });
+
+            const data = this._allFlatData;
+            var currentCageID = cageID;
+            var filteredData = data.filter(item => item.CageID === currentCageID);
+
+            const groupedByCage = filteredData.reduce((acc, item) => {
+                const cageId = item.CageID;
+                if (!acc[cageId]) acc[cageId] = [];
+                acc[cageId].push(item);
+                return acc;
+            }, {});
+
+            const sortedByCage = Object.fromEntries(
+                Object.entries(groupedByCage).map(([cageId, items]) => [
+                    cageId,
+                    items.sort((a, b) => b.PositionInCage - a.PositionInCage)
+                ])
+            );
+
+            const groupedByCageAndPosition = Object.fromEntries(
+                Object.entries(sortedByCage).map(([cageId, items]) => {
+                    const groupedByPosition = items.reduce((acc, item) => {
+                        const pos = item.PositionInCage;
+
+                        if (!acc[pos]) {
+                            acc[pos] = {
+                                items: [],
+                                DropValue: [],
+                                count: 0
+                            };
+                        }
+
+                        acc[pos].items.push(item);
+
+                        // track unique drops
+                        if (!acc[pos].DropValue.includes(item.Drop)) {
+                            acc[pos].DropValue.push(item.Drop);
+                        }
+
+                        acc[pos].count = acc[pos].DropValue.length;
+
+                        return acc;
+                    }, {});
+
+                    return [cageId, groupedByPosition];
+                })
+            );
+
+            const flatArray = Object.values(groupedByCageAndPosition).flatMap(cage =>
+                Object.values(cage).flatMap(group =>
+                    group.items.map(item => ({
+                        ...item,
+                        DropValue: group.DropValue,
+                        count: group.count
+                    }))
+                )
+            );
+
             this._aPositionTexts.forEach((oText, index) => {
-                const groupedByPosition = Map.groupBy(this._allFlatData, cage => cage.PositionInCage);
-
-                const selectedGroupedMap = new Map();
-                for (const [PositionInCage, items] of groupedByPosition.entries()) {
-                    selectedGroupedMap.set(PositionInCage, items.map(item => item.Drop));
-                }
-
-                let uniqueValues = new Set();
-                for (let [key, value] of selectedGroupedMap.entries()) {
-                    // console.log(`Key: ${key}, Value: ${value}`);
-                    uniqueValues.add(value);
-                }
-
-                var positionCountByDrops = Array.from(new Map(
-                    Array.from(uniqueValues.entries(), ([key, valueArray]) => {
-                        return [key, new Set(valueArray).size];
-                    })
-                ).entries());
-
-                var newSet = {};
-                var newArray = [];
-
-                positionCountByDrops.forEach((item, index) => {
-                    newSet = {
-                        "Index": index,
-                        "Count": item[1]
-                    };
-                    newArray.push(newSet);
-                });
-
-                if (newArray[parseInt(index)] !== undefined) {
-                    if (index === newArray[parseInt(index)].Index && newArray[parseInt(index)].Count > 1) {
+                flatArray.forEach(item => {
+                    if (((item.PositionInCage - 1) === index) && item.count > 1) {
                         oText.addStyleClass("duplicatePosition");
                     }
-                }
+                });
             });
-        },
-
-        calculateCasenUnits: function (data) {
-
-            for (var i = 0; i < data.length; i++) {
-                var cases = 0;
-                var units = 0;
-                var total = 0;
-                if (data[i].IsCase) {
-                    cases = (((parseInt(data[i].TotalQuantity) - parseInt(data[i].OpenQuantity)) * parseInt(data[i].DenominatorForCase)) % parseInt(data[i].NumeratorForCase));
-                    units = Math.trunc((((parseInt(data[i].TotalQuantity) - parseInt(data[i].OpenQuantity)) * parseInt(data[i].DenominatorForCase)) / parseInt(data[i].NumeratorForCase)));
-                    total = cases + units;
-                } else {
-                    total = parseInt(data[i].TotalQuantity) - parseInt(data[i].OpenQuantity);
-                }
-                data[i].totalCasenUnits = total;
-            }
-
-        },
-
-        calculatePackBoxes: function (flatData) {
-            var totalCube = 0;
-            for (var k = 0; k < flatData.length; k++) {
-                if (flatData[k].PackBoxVolume !== null && flatData[k].PackBoxVolume !== undefined) {
-                    totalCube = Math.ceil(flatData[k].Cube / flatData[k].PackBoxVolume);
-                    flatData[k].TotalPackBoxReq = totalCube;
-                } else {
-                    flatData[k].TotalPackBoxReq = 0;
-                }
-
-            }
-        },
-
-        sumForCasenUnitForEachDrop: function (allDataRaw, flatData) {
-            for (var i = 0; i < flatData.length; i++) {
-                var currentFlatData = flatData[i];
-                var total = 0;
-                for (var j = 0; j < allDataRaw.length; j++) {
-                    var currentRawData = allDataRaw[j];
-                    if (currentFlatData.Drop === currentRawData.Drop && currentFlatData.CageID === currentRawData.CageID) {
-                        total = total + currentRawData.totalCasenUnits;
-                    }
-                }
-                currentFlatData.FinalTotal = total;
-            }
         },
 
         onShowMore: function () {
@@ -847,7 +325,7 @@ sap.ui.define([
                 oTable.addItem(oRow);
             }
             this._highlightCurrent();
-            this.highlightSamePosition();
+            //this.highlightSamePosition();
         },
 
         _highlightCurrent: function () {
@@ -864,9 +342,15 @@ sap.ui.define([
 
             //this.getView().byId("cageIdOnBox").setText(`Cage ID: ${currentRecord.CageID}`);
             if (!currentRecord) return;
-            //currentRecord.Status = 'Success';
-            var position = currentRecord.concatPositionInCage.split(", ");
-            for (var i = 0; i < position.length; i++) {
+            var position = [];
+            //currentRecord.PositionInCage;
+            if (currentRecord.concatPositionInCage.toString().includes(",")) {
+                position = currentRecord.concatPositionInCage.split(", ");
+            } else {
+                position = [currentRecord.concatPositionInCage.toString()];
+            }
+
+            for (var i = 0; i < position.toString().length; i++) {
                 var oTargetText = this._aPositionTexts[parseInt(position[i]) - 1];
                 if (oTargetText) {
                     oTargetText.getItems()[0].addStyleClass("greenCells");
@@ -874,6 +358,7 @@ sap.ui.define([
             }
 
             this._updatePagedData();
+            this.highlightSamePosition(currentRecord.CageID);
         },
 
         palletiseEvt: function (payload) {
@@ -954,28 +439,6 @@ sap.ui.define([
                     }
                 );
             }
-        },
-
-        checkSamePosition: function (sValue) {
-            var aItems = this._allData;
-            var count = 0;
-            aItems.forEach(function (item) {
-                if (parseInt(item.PositionInCage) === parseInt(sValue)) {
-                    count++;
-                }
-            });
-            return count;
-        },
-
-        checkSamePositionWithDifferentDrop: function (sValue) {
-            var aItems = this._allData;
-            var count = 0;
-            aItems.forEach(function (item) {
-                if (parseInt(item.Drop) !== parseInt(sValue)) {
-                    count++;
-                }
-            });
-            return count;
         }
     });
 });

@@ -208,53 +208,6 @@ sap.ui.define([
 
         },
 
-        onCageIDInput1: function (oEvent) {
-            var that = this;
-            var cageID = oEvent.getSource().getValue();
-
-            that._aAllStations.forEach(function (item) {
-                if (item.CAGEID == cageID && item.STATUS == "None") {
-                    item.STATUS = "Success";
-                    that.count++;
-                }
-            })
-
-            var val = that._aAllStations.filter(function (item) {
-                if (item.CAGEID == cageID) {
-                    return item;
-                }
-            });
-            this.getView().byId("inCageID").setValueState("None");
-
-            if (val.length != 0) {
-                var payload = {
-                    "Event_Timestamp": null,
-                    "Event_Type": "CAGEID_ENTERED",
-                    "ID": "",
-                    "Item_ID": "",
-                    "Level": "H",
-                    "PickTask_ID": val[0].TASKID,
-                    "Quantity": "0",
-                    "User_ID": null
-                }
-                this.palletiseEvt(payload);
-            }
-            if (val.length == 0 && cageID != "") {
-                MessageBox.error(that.oBundle.getText("enter_correct_cage"));
-                this.getView().byId("inCageID").setValueState("Error");
-                return;
-            } else {
-                this.getView().byId("inCageID").setValue();
-            }
-
-            if (that._aAllStations.length == that.count) {
-                this.getView().byId("palletizeBtn").setEnabled(true);
-            }
-
-            that.updatePagedData();
-
-        },
-
         onCageIDInput: function (oEvent) {
             var that = this;
             var cageID = oEvent.getSource().getValue().trim();
@@ -273,6 +226,7 @@ sap.ui.define([
             if (val.length === 0) {
                 MessageBox.error(that.oBundle.getText("enter_correct_cage"));
                 this.getView().byId("inCageID").setValueState("Error");
+                this.getView().byId("inCageID").setValue("");
                 return;
             }
 
@@ -282,7 +236,7 @@ sap.ui.define([
             if (oCage.ISREADY !== "TRUE") {
                 MessageBox.error("This cage is not ready for palletization.");
                 this.getView().byId("inCageID").setValueState("Error");
-                // this.getView().byId("inCageID").setValue("");
+                this.getView().byId("inCageID").setValue("");
                 return;
             }
 

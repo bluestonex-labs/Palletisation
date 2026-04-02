@@ -43,7 +43,7 @@
                                     <Text text="{flattened>Drop}"/>
                                     <!--<Text text="{flattened>Material}"/>-->
                                     <Text text="{flattened>FinalTotal}"/>
-                                    <Text text="{flattened>TotalPackBoxReq}"/>
+                                    <Text text="{flattened>sumTotalPackBoxReq}"/>
                                     <Text text="{flattened>concatPositionInCage}"/>
                                     <ObjectStatus state="{flattened>Status}" icon="sap-icon://circle-task-2"/>
                                 </cells>
