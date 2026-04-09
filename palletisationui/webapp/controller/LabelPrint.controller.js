@@ -1,7 +1,8 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
-    "sap/m/MessageBox"
-], (Controller, MessageBox) => {
+    "sap/m/MessageBox",
+    "sap/ui/core/routing/History"
+], (Controller, MessageBox, History) => {
     "use strict";
 
     return Controller.extend("com.sysco.wm.palletisationui.controller.LabelPrint", {
@@ -16,6 +17,17 @@ sap.ui.define([
         },
 
         _onRouteMatched: function () {
+            var oHistory = History.getInstance();
+            var sLength = oHistory.aHistory.length;
+            var sCurrentPosition;
+            var sNextPosition;
+            if (oHistory.getDirection() === "Backwards") {
+                sCurrentPosition = oHistory.iHistoryPosition;
+                sNextPosition = sCurrentPosition;
+                if (oHistory.aHistory[sNextPosition] === "LabelPrint") {
+                    this.getOwnerComponent().getRouter().navTo("WrapPallet");
+                }
+            }
             this._pageSize = 5;
             this._currentPage = 0;
             this._currentIndex = 0;

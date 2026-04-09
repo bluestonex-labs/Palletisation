@@ -54,6 +54,9 @@ sap.ui.define([
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         BusyIndicator.hide();
+                        var oBundle = that.getView().getModel("i18n").getResourceBundle();
+                        var sText_PNotConn = oBundle.getText("msgBox_eonCheckPrinter");
+                        MessageBox.error(sText_PNotConn);
                     }
                 }, this);
             } else {
