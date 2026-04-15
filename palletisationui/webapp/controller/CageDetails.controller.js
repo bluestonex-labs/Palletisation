@@ -143,7 +143,41 @@ sap.ui.define([
             });
 
             // Convert groupedData to array
-            var result = Object.values(groupedData);
+            var groupedResult = Object.values(groupedData);
+
+            const groupedMap = new Map();
+
+            // Step 1: Group by CageID
+            groupedResult.forEach(entry => {
+                const cageId = entry.CageID;
+
+                if (!groupedMap.has(cageId)) {
+                    groupedMap.set(cageId, []);
+                }
+
+                groupedMap.get(cageId).push(entry);
+            });
+
+            // Step 2: Sort each Cage group by Drop (descending)
+            const result = [];
+
+            groupedMap.forEach((entries, cageId) => {
+                const sortedEntries = entries.sort((a, b) => b.Drop - a.Drop);
+
+                // Step 3: Push back into final array (same structure)
+                sortedEntries.forEach(entry => {
+                    result.push({
+                        CageID: entry.CageID,
+                        Drop: entry.Drop,
+                        totalCasenUnits: entry.totalCasenUnits,
+                        items: entry.items.map(item => ({
+                            ...item // preserve ALL item properties
+                        }))
+                    });
+                });
+            });
+
+            console.log(result);
 
             for (var i = 0; i < result.length; i++) {
                 var currentDropItems = result[i];
