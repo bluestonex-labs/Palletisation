@@ -19,6 +19,8 @@ sap.ui.define([
         },
 
         _onRouteMatched: function () {
+            this.getView().byId("wrapPalletYesBtn").setEnabled(true);
+            this.getView().byId("wrapPalletNoBtn").setEnabled(true);
             var taksId = this.getOwnerComponent().getModel("printLabelDetails").getData().results;
             var taksId1 = this.getOwnerComponent().getModel("printLabelDetails1").getData().results;
             this.getView().byId("palletId").setText(taksId1.PalletID);
@@ -432,6 +434,8 @@ sap.ui.define([
         },
 
         PrintConfirmLabel: async function () {
+            this.getView().byId("wrapPalletYesBtn").setEnabled(false);
+            this.getView().byId("wrapPalletNoBtn").setEnabled(false);
             var res = await this._callNextMarshelling("print");
             var that = this;
             MessageBox.information(
@@ -517,6 +521,8 @@ sap.ui.define([
         },
 
         gotoRequestJob: async function () {
+            this.getView().byId("wrapPalletYesBtn").setEnabled(false);
+            this.getView().byId("wrapPalletNoBtn").setEnabled(false);
             var res = await this._callNextMarshelling();
             this.getOwnerComponent().getRouter().navTo("RouteInfo");
         }

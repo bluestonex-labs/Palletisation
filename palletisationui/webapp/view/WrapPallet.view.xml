@@ -9,8 +9,8 @@
                             <Label id="palletId" text="" class="sapUiTinyMargin"/>
                             <Label text="{i18n>pallet_wrap}" class="sapUiTinyMargin"/>
                             <HBox alignContent="Center" alignItems="Center" justifyContent="Center" fitContainer="true" class="sapUiTinyMargin">
-                                <Button width="100px" class="roundCorner blackButton sapUiTinyMargin" type="Emphasized" press="PrintConfirmLabel" text="{i18n>yes}"/>
-                                <Button width="100px" class="roundCorner blackButton sapUiTinyMargin" type="Emphasized" press="gotoRequestJob" text="{i18n>no}"/>
+                                <Button width="100px" class="roundCorner blackButton sapUiTinyMargin" type="Emphasized" press="PrintConfirmLabel" text="{i18n>yes}" id="wrapPalletYesBtn"/>
+                                <Button width="100px" class="roundCorner blackButton sapUiTinyMargin" type="Emphasized" press="gotoRequestJob" text="{i18n>no}" id="wrapPalletNoBtn"/>
                             </HBox>
                         </VBox>
                     </f:content>

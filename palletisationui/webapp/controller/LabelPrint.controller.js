@@ -17,6 +17,7 @@ sap.ui.define([
         },
 
         _onRouteMatched: function () {
+            this.getView().byId("printLabelBtn").setEnabled(true);
             var oHistory = History.getInstance();
             var sLength = oHistory.aHistory.length;
             var sCurrentPosition;
@@ -526,6 +527,7 @@ sap.ui.define([
         },
 
         onPrint: async function () {
+            this.getView().byId("printLabelBtn").setEnabled(false);
             var resultA = await this._callCreatePalletService();
             var resultB = await this._callPrintLabel(resultA);
             var oModel = new sap.ui.model.json.JSONModel({ results: resultA });
