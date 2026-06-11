@@ -148,6 +148,7 @@
                                 scanSuccess="onScanSuccess"
                                 scanFail="onScanFail"
                                 inputLiveUpdate="onScanLiveUpdate"
+                                visible="false"
                             />
                         </HBox>
                         <!--<VBox alignContent="Center" alignItems="Center" justifyContent="Center" width="100%">-->

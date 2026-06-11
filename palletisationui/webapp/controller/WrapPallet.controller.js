@@ -451,7 +451,7 @@ sap.ui.define([
             );
         },
 
-        palletiseEvt: function (payload) {
+        palletiseEvt: function (payload, payload1) {
             var that = this;    
             var oLocale = sap.ui.getCore().getConfiguration().getLocale();
             var lang = oLocale.language;
@@ -467,13 +467,36 @@ sap.ui.define([
                     dataType: "json",
                     data: JSON.stringify(payload),
                     success: function (oData, response) {
+                        that.palletiseEvt1(payload1);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(jqXHR.responseText);
+                    }
+                }, this);  
+        },
+
+        palletiseEvt1: function (payload1) {
+            var that = this;    
+            var oLocale = sap.ui.getCore().getConfiguration().getLocale();
+            var lang = oLocale.language;
+                var url = this.appModulePath + "/palletiseservices/CloudWM/PalletisingEvents";
+                var oBundle = that.getView().getModel("i18n").getResourceBundle();
+                var sText = "";
+                var sErrorText = "";
+                $.ajax({
+                    url: url,
+                    beforeSend: function (xhr) { xhr.setRequestHeader('Accept-Language', lang); },
+                    type: "POST",
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: JSON.stringify(payload1),
+                    success: function (oData, response) {
     
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         console.log(jqXHR.responseText);
                     }
-                }, this);
-            
+                }, this);  
         },
 
         _callNextMarshelling: function (check) {
@@ -510,8 +533,19 @@ sap.ui.define([
                             "PickTask_ID": that.getOwnerComponent().getModel("currentRouteCages").getData()[0].TASKID,
                             "Quantity": "0",
                             "User_ID": null
-                        } 
-                        that.palletiseEvt(payload);
+                        }; 
+                        //MARSHALLING_COMPLETED
+                            var payload1 = {
+                            "Event_Timestamp": null,
+                            "Event_Type": "MARSHALLING_COMPLETED",
+                            "ID": "",
+                            "Item_ID": "",
+                            "Level": "H",
+                            "PickTask_ID": that.getOwnerComponent().getModel("currentRouteCages").getData()[0].TASKID,
+                            "Quantity": "0",
+                            "User_ID": null
+                        }; 
+                        that.palletiseEvt(payload, payload1);
                     },
                     error: function (error) {
                         reject(error);
