@@ -179,6 +179,13 @@ sap.ui.define([
                 palletIndicatorCode = this.sMediaPlacement;
             }
 
+            var custNamSize = "50";
+            if (this.sCustNam.length > 24 && this.sCustNam.length <= 30) {
+                custNamSize = "40";
+            } else if (this.sCustNam.length > 30) {
+                custNamSize = "32";
+            }
+
             var sLabel3 = "CT~~CD,~CC^~CT~\n" +
                 "^XA\n" +
                 "^POI\n" +
@@ -201,6 +208,23 @@ sap.ui.define([
                 "^FO280,168^A0N,20,20^FB729,10,15,L^FH\^CI28^FD" + this.sTemp + "^FS^CI28\n" +
                 "^FO460,168^A0N,20,20^FB929,10,15,L^FH\^LI28^FD" + this.sPalletId + "^FS^CI28\n" +
                 "^XZ";
+
+                var secondLabel = "\nCT~~CD,~CC^~CT~\n" +
+                "^XA\n" +
+                "^POI\n" +
+                "^FO,10^GB570,185,2^FS\n" +
+                "^FO20,30^A0N,65,65^FB729,1,15,L^FH^CI28^FD" + this.sDelPlatDesc + "^FS^CI27\n" +
+                "^FO180,130^A0N,65,65^FB929,1,15,L^FH^CI28^FD" + this.sRoute + "^FS^CI27\n" +
+                "^XZ";
+
+            var thirdLabel = "\nCT~~CD,~CC^~CT~\n" +
+                "^XA\n" +
+                "^POI\n" +
+                "^FO,10^GB570,185,2^FS\n" +
+                "^FO20,30^A0N,30,30^FB729,1,15,L^FH^CI28^FD" + this.sRoute + "^FS^CI27\n" +
+                "^FO240,30^A0N,60,60^FB729,1,15,L^FH^CI28^FD" + this.sMinDrop + "^FS^CI27\n" +
+                "^FS^CI27\n^FO10,140^A0N,55,"+custNamSize+"^FB929,1,15,L^FH^CI28^FD" + this.sCustNam + "^FS^CI27\n" +
+                "^XZ";
             
             /*"CT~~CD,~CC^~CT~\n" +
                 "^XA\n" +
@@ -219,7 +243,7 @@ sap.ui.define([
                 "^FO280,160^A0N,29,29^FB629,10,15,L^FH\^LI28^FD" + this.sPickingSite + "^FS^CI27\n" +
                 "^FO400,160^A0N,29,29^FB729,10,15,L^FH\^LI28^FD" + this.sTemp + "^FS^CI27\n" +
                 "^XZ";*/
-            sMonoPalletabel = sLabel3;
+            sMonoPalletabel = sLabel3 + secondLabel + thirdLabel;
 
             var sMultiLabel3 = "CT~~CD,~CC^~CT~\n" +
                 "^XA\n" +
@@ -245,6 +269,15 @@ sap.ui.define([
                 "^FO280,168^A0N,20,20^FB729,10,15,L^FH\^CI28^FD" + this.sTemp + "^FS^CI28\n" +
                 "^XZ";
 
+                var thirdMultiLabel = "CT~~CD,~CC^~CT~\n" +
+                "^XA\n" +
+                "^POI\n" +
+                "^FO,10^GB570,185,2^FS\n" +
+                "^FO20,30^A0N,30,30^FB729,1,15,L^FH^CI28^FD" + this.sRoute + "^FS^CI27\n" +
+                "^FO80,90^A0N,80,80^FB429,10,15,L^FH\^LI28^FD" + this.sMinDrop + "^FS^CI27\n" +
+                "^FO310,90^A0N,80,80^FB429,10,15,L^FH\^LI28^FD" + this.sMaxDrop + "^FS^CI27\n" +
+                "^XZ";
+
 
                 /*"CT~~CD,~CC^~CT~\n" +
                 "^XA\n" +
@@ -263,7 +296,7 @@ sap.ui.define([
                 "^FO400,160^A0N,29,29^FB729,10,15,L^FH\^LI28^FD" + this.sTemp + "^FS^CI27\n" +
                 "^XZ";*/
 
-            sMultiPalletabel = sMultiLabel3;
+            sMultiPalletabel = sMultiLabel3 + secondLabel + thirdMultiLabel;
             var printerModel = sap.ui.getCore().getModel('printerModel');
             var macAddress = "";
             if (printerModel !== undefined) {
