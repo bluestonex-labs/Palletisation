@@ -180,9 +180,9 @@ sap.ui.define([
             }
 
             var custNamSize = "50";
-            if (this.sCustNam.length > 24 && this.sCustNam.length <= 30) {
+            if (this.sCustNam.length >= 23 && this.sCustNam.length <= 28) {
                 custNamSize = "40";
-            } else if (this.sCustNam.length > 30) {
+            } else if (this.sCustNam.length > 28) {
                 custNamSize = "32";
             }
 
