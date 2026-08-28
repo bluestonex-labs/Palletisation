@@ -156,7 +156,7 @@ sap.ui.define([
 
             var recordModel = new JSONModel(oRecord);
             this.getOwnerComponent().setModel(recordModel, "selectedRecord");
-            this.getOwnerComponent().getRouter().navTo("StationList");
+            this.getOwnerComponent().getRouter().navTo("RouteInfo");
             // sap.m.MessageToast.show("Pressed: " + sText + " (ID: " + sId + ")");
         },
 
