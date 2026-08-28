@@ -267,6 +267,7 @@ sap.ui.define([
                 "^FO10,168^A0N,20,20^FB429,10,15,L^FH\^LI28^FD" + this.sDeliveryDate + "^FS^CI27\n" +
                 "^FO150,168^A0N,20,20^FB629,10,15,L^FH\^LI28^FD" + this.sPickingSite + "^FS^CI27\n" +
                 "^FO280,168^A0N,20,20^FB729,10,15,L^FH\^CI28^FD" + this.sTemp + "^FS^CI28\n" +
+                "^FO460,168^A0N,20,20^FB929,10,15,L^FH\^LI28^FD" + this.sPalletId + "^FS^CI28\n" +
                 "^XZ";
 
                 var thirdMultiLabel = "CT~~CD,~CC^~CT~\n" +
