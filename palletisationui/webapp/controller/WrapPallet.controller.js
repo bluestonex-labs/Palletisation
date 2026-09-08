@@ -222,7 +222,7 @@ sap.ui.define([
                 "^POI\n" +
                 "^FO,10^GB570,185,2^FS\n" +
                 "^FO20,30^A0N,30,30^FB729,1,15,L^FH^CI28^FD" + this.sRoute + "^FS^CI27\n" +
-                "^FO240,30^A0N,60,60^FB729,1,15,L^FH^CI28^FD" + this.sMinDrop + "^FS^CI27\n" +
+                "^FO240,30^A0N,90,90^FB729,1,15,L^FH^CI28^FD" + this.sMinDrop + "^FS^CI27\n" +
                 "^FS^CI27\n^FO10,140^A0N,55,"+custNamSize+"^FB929,1,15,L^FH^CI28^FD" + this.sCustNam + "^FS^CI27\n" +
                 "^XZ";
             
