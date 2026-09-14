@@ -118,13 +118,6 @@
           ]
         },
         {
-          "name": "StationList",
-          "pattern": "StationList",
-          "target": [
-            "TargetStationList"
-          ]
-        },
-        {
           "name": "RouteInfo",
           "pattern": "RouteInfo",
           "target": [
@@ -157,10 +150,6 @@
         "TargetHome": {
           "id": "Home",
           "name": "Home"
-        },
-        "TargetStationList": {
-          "id": "StationList",
-          "name": "StationList"
         },
         "TargetRouteInfo": {
           "id": "RouteInfo",
