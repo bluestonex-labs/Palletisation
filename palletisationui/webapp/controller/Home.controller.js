@@ -10,7 +10,45 @@ sap.ui.define([
     return Controller.extend("com.sysco.wm.palletisationui.controller.Home", {
 
         onInit() {
+            this.loadAndBindPlantData();
+        },
 
+        loadAndBindPlantData: function () {
+			BusyIndicator.show(500);
+            var appId = this.getOwnerComponent().getManifestEntry("/sap.app/id");
+            var appPath = appId.replaceAll(".", "/");
+            this.appModulePath = jQuery.sap.getModulePath(appPath);
+			var that = this;
+			var oBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
+			var oLocale = sap.ui.getCore().getConfiguration().getLocale();
+			var lang = oLocale.language;
+
+			$.ajax({
+				url: this.appModulePath + "/palletiseservices/CloudWM/getPlantListForUser()",
+				beforeSend: function (xhr) { xhr.setRequestHeader('Accept-Language', lang); },
+				type: "GET",
+				contentType: "application/json",
+				dataType: "json",
+				success: function (oData, response) {
+
+					var sDefaultPlant = that.defaultPlant = oData.value.defaultPlant;
+					BusyIndicator.hide();
+
+					if (sDefaultPlant !== "") {
+                        that.loadPalletisationStations();
+					} else {
+						var sDefaultPlantWarningMsg = oBundle.getText("defaultPlantMissing");
+						MessageBox.warning(sDefaultPlantWarningMsg);
+					}
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+					//var err = textStatus;
+					BusyIndicator.hide();
+				}
+			}, this);
+		},
+
+        loadPalletisationStations: function () {
             var appId = this.getOwnerComponent().getManifestEntry("/sap.app/id");
             var appPath = appId.replaceAll(".", "/");
             this.appModulePath = jQuery.sap.getModulePath(appPath);
@@ -18,13 +56,13 @@ sap.ui.define([
             var sDest = "/palletiseservices";
             var oLocale = sap.ui.getCore().getConfiguration().getLocale();
             var lang = oLocale.language;
-            var sUrl = this.appModulePath + sDest + "/Pick/MarshallingBins" +
+            /*var sUrl = this.appModulePath + sDest + "/Pick/MarshallingBins" +
                 "?$select=Description,Temperature,Status_ID" +
                 "&$filter=Area_ID eq '2' and Area_Group_ID eq '2' and IsBlocked eq false and CanOpenClose eq true" +
-                "&$expand=Status";
+                "&$expand=Status";*/
             var sUrl = this.appModulePath + sDest + "/Palletise/PalletisationBins" +
                 "?$select=Description,Temperature,Status_ID" +
-                "&$filter=Area_ID eq '2' and Area_Group_ID eq '2' and IsBlocked eq false and CanOpenClose eq true" +
+                "&$filter=Plant eq '" + this.defaultPlant + "' and Area_ID eq '2' and Area_Group_ID eq '2' and IsBlocked eq false and CanOpenClose eq true" +
                 "&$orderby=Temperature desc"
                 "&$expand=Status";
             $.ajax({
@@ -46,7 +84,6 @@ sap.ui.define([
                     console.log("Error:", textStatus, errorThrown);
                 }
             });
-
         },
 
         onAfterRendering: function () {
