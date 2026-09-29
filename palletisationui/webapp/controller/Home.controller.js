@@ -22,6 +22,11 @@ sap.ui.define([
                 "?$select=Description,Temperature,Status_ID" +
                 "&$filter=Area_ID eq '2' and Area_Group_ID eq '2' and IsBlocked eq false and CanOpenClose eq true" +
                 "&$expand=Status";
+            var sUrl = this.appModulePath + sDest + "/Palletise/PalletisationBins" +
+                "?$select=Description,Temperature,Status_ID" +
+                "&$filter=Area_ID eq '2' and Area_Group_ID eq '2' and IsBlocked eq false and CanOpenClose eq true" +
+                "&$orderby=Temperature desc"
+                "&$expand=Status";
             $.ajax({
                 url: sUrl,
                 beforeSend: function (xhr) { xhr.setRequestHeader('Accept-Language', lang); },
