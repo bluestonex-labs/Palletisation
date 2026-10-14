@@ -11,6 +11,7 @@ sap.ui.define([
 
         onInit() {
             this.loadAndBindPlantData();
+            this.loadDefaultPlantAndTemp();
         },
 
         loadAndBindPlantData: function () {
@@ -215,6 +216,34 @@ sap.ui.define([
                 this.getOwnerComponent().getModel("dataModel").getData()[0].B4 = true;
             }
 
+        },
+
+        loadDefaultPlantAndTemp: function () {
+            BusyIndicator.show(500);
+            var that = this;
+            var oLocale = sap.ui.getCore().getConfiguration().getLocale();
+            var lang = oLocale.language;
+
+            $.ajax({
+                url: this.appModulePath + "/cloudWMService/CloudWM/getUserContext()", //"/cloudWMService/CloudWM/getPlantListForUser()",
+                beforeSend: function (xhr) { xhr.setRequestHeader('Accept-Language', lang); },
+
+                type: "GET",
+                contentType: "application/json",
+                dataType: "json",
+                async: true,
+                success: function (oData, response) {
+                    BusyIndicator.hide();
+                    that.getOwnerComponent().plant = oData.value.split(",")[0].replaceAll('"', "").split(":")[1];;
+                    that.getOwnerComponent().temperature = oData.value.split(",")[2].replaceAll('"', "").split(":")[1].replace("}","");
+
+
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    BusyIndicator.hide();
+                    MessageToast.show(jqXHR.responseText); //, "ERROR", "Service call error");
+                }
+            }, this);
         }
     });
 });

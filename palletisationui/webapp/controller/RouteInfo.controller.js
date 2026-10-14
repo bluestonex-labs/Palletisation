@@ -191,6 +191,7 @@ sap.ui.define([
             var oBundle = that.getView().getModel("i18n").getResourceBundle();
             var sText = "";
             var sErrorText = "";
+            Object.assign(payload, {"Plant": this.getOwnerComponent().plant, "Temperature": this.getOwnerComponent().temperature});
             $.ajax({
                 url: url,
                 beforeSend: function (xhr) { xhr.setRequestHeader('Accept-Language', lang); },
