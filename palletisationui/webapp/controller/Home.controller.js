@@ -225,7 +225,7 @@ sap.ui.define([
             var lang = oLocale.language;
 
             $.ajax({
-                url: this.appModulePath + "/cloudWMService/CloudWM/getUserContext()", //"/cloudWMService/CloudWM/getPlantListForUser()",
+                url: this.appModulePath + "/palletiseservices/CloudWM/getUserContext()", //"/cloudWMService/CloudWM/getPlantListForUser()",
                 beforeSend: function (xhr) { xhr.setRequestHeader('Accept-Language', lang); },
 
                 type: "GET",
