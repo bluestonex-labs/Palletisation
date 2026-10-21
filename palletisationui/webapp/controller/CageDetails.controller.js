@@ -428,19 +428,19 @@ sap.ui.define([
             if (this._allData[this._currentIndex].IsPalletable) {
                 //palletisation confirm
                 var sCagesData = this.getOwnerComponent().getModel("currentRouteCages").getData();
-                sCagesData.forEach(function (item) {
+                
                 var payload = {
                     "Event_Timestamp": null,
                     "Event_Type": "PALLETISATION_CONFIRMED",
                     "ID": "",
                     "Item_ID": "",
                     "Level": "H",
-                    "PickTask_ID": item.TASKID,
+                    "PickTask_ID": sCagesData.TASKID,
                     "Quantity": "" + this._allData[this._currentIndex].TotalQuantity + "",
                     "User_ID": null
                 }
                 this.palletiseEvt(payload);
-            });
+            
 
                 // Move to next record
                 //var that = this;
