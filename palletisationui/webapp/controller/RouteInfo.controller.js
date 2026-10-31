@@ -133,13 +133,16 @@ sap.ui.define([
             this.getView().byId("inCageID").setValue("");
             this.getView().byId("palletizeBtn").setEnabled(false);
 
+            //SOMSCR033 - Update the cage availability upon cage empty *** Start ***
             var oData = {
                 key: sKey,
                 items: aData.map(function (item) {
-                    item.STATUS = item.STATUS || "None";
+                    item.STATUS = item.STATUS || 
+                        (item.ALREADYMOVED === "TRUE" ? "Success" : "None");
                     return item;
                 })
             };
+            //*** End ***
             if (this.getOwnerComponent().getModel("CurrentRouteData")) {
                 this.checkKeys.map(function (item) {
                     if (sKey == item) {
@@ -182,6 +185,7 @@ sap.ui.define([
                 MessageBox.show(that.oBundle.getText("no_routes"));
             }
         },
+
 
         palletiseEvt: function (payload) {
             var that = this;
@@ -240,41 +244,37 @@ sap.ui.define([
                 this.getView().byId("inCageID").setValue("");
                 return;
             }
-
-            // Cage is READY → mark as scanned
-            if (oCage.STATUS === "None") {
-                oCage.STATUS = "Success";
+            if (oCage.ALREADYMOVED === "TRUE") {
+                MessageBox.information("Cage is already moved. Scan Cage which is not moved.");
                 that.count++;
+                return;
+            } else {
+                // Cage is READY → mark as scanned
+                if (oCage.STATUS === "None") {
+                    oCage.STATUS = "Success";
+                    that.count++;
+                }
+
+                // Send event
+                var payload = {
+                    "Event_Timestamp": null,
+                    "Event_Type": "CAGEID_ENTERED",
+                    "ID": "",
+                    "Item_ID": "",
+                    "Level": "H",
+                    "PickTask_ID": oCage.TASKID,
+                    "Quantity": "0",
+                    "User_ID": null
+                };
+
+                this.palletiseEvt(payload);
+                this.getView().byId("inCageID").setValue("");
+
+                if (that._aAllStations.length == that.count) {
+                    this.getView().byId("palletizeBtn").setEnabled(true);
+                }
+                that.updatePagedData();
             }
-
-            // Send event
-            var payload = {
-                "Event_Timestamp": null,
-                "Event_Type": "CAGEID_ENTERED",
-                "ID": "",
-                "Item_ID": "",
-                "Level": "H",
-                "PickTask_ID": oCage.TASKID,
-                "Quantity": "0",
-                "User_ID": null
-            };
-
-            this.palletiseEvt(payload);
-
-            this.getView().byId("inCageID").setValue("");
-
-            // Enable palletize if at least one cage is Success and TRUE
-            //var bEnable = that._aAllStations.some(function (item) {
-            //    return item.STATUS === "Success" && item.ISREADY === "TRUE";
-            //});
-
-            if (that._aAllStations.length == that.count) {
-                this.getView().byId("palletizeBtn").setEnabled(true);
-            }
-
-            //this.getView().byId("palletizeBtn").setEnabled(bEnable);
-
-            that.updatePagedData();
         },
 
         updatePagedData: function () {
@@ -287,6 +287,17 @@ sap.ui.define([
                 items: pagedItems
             });
             this.getView().setModel(oPagedModel, "routeData");
+
+            var pagedItems = this._aAllStations.slice(start, end);
+
+            pagedItems.forEach(item => {
+                if (String(item.ALREADYMOVED).toUpperCase() === "TRUE") {
+                    this.count++;
+                }
+            });
+
+            var bAllMoved = pagedItems.length > 0 && this.count === pagedItems.length;
+            this.getView().byId("palletizeBtn").setEnabled(bAllMoved);
 
             this.onBtnHandle();
         },

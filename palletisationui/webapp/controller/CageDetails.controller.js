@@ -44,12 +44,13 @@ sap.ui.define([
                 aItems.forEach(item => {
                     if (item.IsPalletable) {
                         fData.push({
+                            PickID: item.Task_ID,
                             CageID: cageID,
                             TotalQuantity: parseInt(item.TotalQuantity),
                             OpenQuantity: parseInt(item.OpenQuantity),
                             Uom_UnitCode: item.Uom_UnitCode,
                             PositionInCage: item.PositionInCage,
-                            Status: "None",
+                            Status: item.alreadyMoved === true ? "Success" : "None",
                             Drop: item.Drop,
                             IsPalletable: item.IsPalletable,
                             IsCase: item.IsCase,
@@ -62,7 +63,8 @@ sap.ui.define([
                             PackingBoxRequired: item.PackingBoxRequired,
                             Cube: parseFloat(item.Cube),
                             PackBoxType_PackBoxType: item.PackBoxType_PackBoxType,
-                            PackBoxVolume: item.PackBoxVolume ? parseFloat(item.PackBoxVolume) : null
+                            PackBoxVolume: item.PackBoxVolume ? parseFloat(item.PackBoxVolume) : null,
+                            alreadyMoved: item.alreadyMoved
                         });
                     }
                 });
@@ -135,11 +137,14 @@ sap.ui.define([
                         CageID: item.CageID,
                         Drop: item.Drop,
                         totalCasenUnits: 0,
+                        allMoved: true, // CHANGED: group-level moved flag
                         items: []
                     };
                 }
                 groupedData[key].items.push(item);
                 groupedData[key].totalCasenUnits += item.totalCasenUnits;
+                // CHANGED: stays true only if every item in this Cage + Drop is moved
+                groupedData[key].allMoved = groupedData[key].allMoved && item.alreadyMoved === true;
             });
 
             // Convert groupedData to array
@@ -170,6 +175,7 @@ sap.ui.define([
                         CageID: entry.CageID,
                         Drop: entry.Drop,
                         totalCasenUnits: entry.totalCasenUnits,
+                        allMoved: entry.allMoved, // CHANGED: carry flag through
                         items: entry.items.map(item => ({
                             ...item // preserve ALL item properties
                         }))
@@ -200,8 +206,12 @@ sap.ui.define([
 
             var filteredItems = [];
             for (var i = 0; i < result.length; i++) {
-                result[i].items[0].FinalTotal = result[i].totalCasenUnits;
-                filteredItems.push(result[i].items.slice(0, 1)[0]);
+                var oSummary = result[i].items[0];
+                oSummary.FinalTotal = result[i].totalCasenUnits;
+                // CHANGED: Status reflects the whole drop, not just the first item
+                oSummary.alreadyMoved = result[i].allMoved;
+                oSummary.Status = result[i].allMoved ? "Success" : "None";
+                filteredItems.push(oSummary);
             }
 
             var aFlattenedData = filteredItems;
@@ -212,7 +222,6 @@ sap.ui.define([
             this.getView().setModel(oFlatModel, "flattened");
             this._allData = aFlattenedData;
             this._updatePagedData();
-
         },
 
         _updatePagedData: function () {
@@ -226,6 +235,16 @@ sap.ui.define([
             // Manage button visibility
             this.getView().byId("btnUp").setVisible(this._currentPage > 0);
             this.getView().byId("btnDown").setVisible(end < this._allData.length);
+
+            //CR33 
+            /* move to next list of items if all items are green(status is success). this is for left table only Matrix need to be updated */
+            /*var bAllSuccess = visibleData.length > 0 && visibleData.every(item =>
+                item.Status === "Success"
+            );
+
+            if (bAllSuccess) {
+                this.onShowMore();
+            }*/
         },
 
         highlightSamePosition: function (cageID) {
@@ -403,7 +422,7 @@ sap.ui.define([
             var oBundle = that.getView().getModel("i18n").getResourceBundle();
             var sText = "";
             var sErrorText = "";
-            Object.assign(payload, {"Plant": this.getOwnerComponent().plant, "Temperature": this.getOwnerComponent().temperature});
+            Object.assign(payload, { "Plant": this.getOwnerComponent().plant, "Temperature": this.getOwnerComponent().temperature });
             $.ajax({
                 url: url,
                 beforeSend: function (xhr) { xhr.setRequestHeader('Accept-Language', lang); },
@@ -421,29 +440,90 @@ sap.ui.define([
 
         },
 
+        //SOMSCR033 - Update the cage availability upon cage empty ** Start **
+        confirmItemMovement: function (dataToMove) {
+            var that = this;
+            var sDest = "/palletiseservices";
+            var oLocale = sap.ui.getCore().getConfiguration().getLocale();
+            var lang = oLocale.language;
+            var url = this.appModulePath + sDest + "/Palletise/confirmItemMoved";
+            var oBundle = that.getView().getModel("i18n").getResourceBundle();
+            var sText = "";
+            var sErrorText = "";
+
+            var oSelected = dataToMove;
+
+            // Split positions and trim the spaces left after ", "
+            var aPositions = String(oSelected.concatPositionInCage)
+                .split(",")
+                .map(pos => pos.trim());
+
+            var aMatched = [];
+
+            this._allFlatData.forEach(item => {
+                if (item.CageID === oSelected.CageID &&
+                    item.PickID === oSelected.PickID &&
+                    aPositions.includes(String(item.PositionInCage).trim()) &&
+                    item.Status === "None" &&
+                    item.alreadyMoved === false) {
+
+                    aMatched.push({
+                        PickTaskID: item.PickID,
+                        ItemID: item.ItemID
+                    });
+                }
+            });
+
+            console.log(aMatched);
+
+            var payload = {
+                "Tasks": aMatched
+            };
+
+            $.ajax({
+                url: url,
+                beforeSend: function (xhr) { xhr.setRequestHeader('Accept-Language', lang); },
+                type: "POST",
+                contentType: "application/json",
+                dataType: "json",
+                data: JSON.stringify(payload),
+                success: function (oData, response) {
+                    console.log(oData);
+                    console.log(response);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(jqXHR.responseText);
+                }
+            }, this);
+        },
+        // ** End **
 
         onConfirm: function () {
 
             //checking IsPalletable before palletising
             if (this._allData[this._currentIndex].IsPalletable) {
-                //palletisation confirm
-                var sCagesData = this.getOwnerComponent().getModel("currentRouteCages").getData();
-                
-                var payload = {
-                    "Event_Timestamp": null,
-                    "Event_Type": "PALLETISATION_CONFIRMED",
-                    "ID": "",
-                    "Item_ID": "",
-                    "Level": "H",
-                    "PickTask_ID": sCagesData.TASKID,
-                    "Quantity": "" + this._allData[this._currentIndex].TotalQuantity + "",
-                    "User_ID": null
+
+                if (this._allData[this._currentIndex].Status !== "Success") {
+                    var sCagesData = this.getOwnerComponent().getModel("currentRouteCages").getData();
+
+                    //SOMSCR033 - Update the cage availability upon cage empty ** Start **
+                    this.confirmItemMovement(this._allData[this._currentIndex]);
+                    //** End **
+
+                    var payload = {
+                        "Event_Timestamp": null,
+                        "Event_Type": "PALLETISATION_CONFIRMED",
+                        "ID": "",
+                        "Item_ID": "",
+                        "Level": "H",
+                        "PickTask_ID": this._allData[this._currentIndex].PickID,
+                        "Quantity": "" + this._allData[this._currentIndex].TotalQuantity + "",
+                        "User_ID": null
+                    }
+                    this.palletiseEvt(payload);
                 }
-                this.palletiseEvt(payload);
-            
 
                 // Move to next record
-                //var that = this;
                 if (this._currentIndex < this._allData.length - 1) {
                     this._allData[this._currentIndex].Status = 'Success';
                     this._currentIndex++;
