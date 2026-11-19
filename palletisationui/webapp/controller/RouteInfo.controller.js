@@ -277,6 +277,264 @@ sap.ui.define([
             }
         },
 
+        //SOMSCR033 - Update the cage availability upon cage empty ** Start **
+        confirmItemMovement: function (dataToMove) {
+            var that = this;
+            var sDest = "/palletiseservices";
+            var oLocale = sap.ui.getCore().getConfiguration().getLocale();
+            var lang = oLocale.language;
+            var url = this.appModulePath + sDest + "/Palletise/confirmItemMoved";
+            var oBundle = that.getView().getModel("i18n").getResourceBundle();
+            var sText = "";
+            var sErrorText = "";
+
+            var oSelected = dataToMove;
+
+            // Split positions and trim the spaces left after ", "
+            var aPositions = String(oSelected.concatPositionInCage)
+                .split(",")
+                .map(pos => pos.trim());
+
+            var aMatched = [];
+
+            this._allFlatData.forEach(item => {
+                if (item.CageID === oSelected.CageID &&
+                    item.PickID === oSelected.PickID &&
+                    aPositions.includes(String(item.PositionInCage).trim()) &&
+                    item.Status === "None" &&
+                    item.alreadyMoved === false) {
+
+                    aMatched.push({
+                        PickTaskID: item.PickID,
+                        ItemID: item.ItemID
+                    });
+                }
+            });
+
+            console.log(aMatched);
+
+            var payload = {
+                "Tasks": aMatched
+            };
+
+            $.ajax({
+                url: url,
+                beforeSend: function (xhr) { xhr.setRequestHeader('Accept-Language', lang); },
+                type: "POST",
+                contentType: "application/json",
+                dataType: "json",
+                data: JSON.stringify(payload),
+                success: function (oData, response) {
+                    console.log(oData);
+                    console.log(response);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(jqXHR.responseText);
+                }
+            }, this);
+        },
+
+        _createDynamicTable1: function () {
+
+            var oModel = this.getOwnerComponent().getModel("cageDetails");
+            var oData = oModel.getData();
+
+            var fData = [];
+
+            // Step 1: Flatten oData.value.items
+            for (let cageId in oData.items) {
+                let aCages = oData.items[cageId];
+                let cageID = aCages.CageID;
+                let aItems = aCages.To_PickTaskItems || [];
+
+                aItems.forEach(item => {
+                    if (item.IsPalletable) {
+                        fData.push({
+                            PickID: item.Task_ID,
+                            CageID: cageID,
+                            TotalQuantity: parseInt(item.TotalQuantity),
+                            OpenQuantity: parseInt(item.OpenQuantity),
+                            Uom_UnitCode: item.Uom_UnitCode,
+                            PositionInCage: item.PositionInCage,
+                            Status: item.alreadyMoved === true ? "Success" : "None",
+                            Drop: item.Drop,
+                            IsPalletable: item.IsPalletable,
+                            IsCase: item.IsCase,
+                            ItemID: item.ItemID,
+                            DenominatorForCase: item.DenominatorForCase,
+                            NumeratorForCase: item.NumeratorForCase,
+                            TotalCase: "",
+                            TotalUnits: "",
+                            TotalPackBoxReq: 0,
+                            PackingBoxRequired: item.PackingBoxRequired,
+                            Cube: parseFloat(item.Cube),
+                            PackBoxType_PackBoxType: item.PackBoxType_PackBoxType,
+                            PackBoxVolume: item.PackBoxVolume ? parseFloat(item.PackBoxVolume) : null,
+                            alreadyMoved: item.alreadyMoved
+                        });
+                    }
+                });
+            }
+
+            this._allFlatData = fData;
+            const getUniquePositions = (items) => {
+                const grouped = items.reduce((acc, item) => {
+                    const key = `${item.CageID}-${item.Drop}`;
+                    if (!acc[key]) {
+                        acc[key] = new Set();
+                    }
+                    acc[key].add(item.PositionInCage);
+                    return acc;
+                }, {});
+
+                return Object.keys(grouped).map(key => ({
+                    key,
+                    uniquePositions: Array.from(grouped[key])
+                }));
+            }
+            var uniqueDrops = getUniquePositions(this._allFlatData);
+
+            for (var i = 0; i < this._allFlatData.length; i++) {
+                var currentNewInv = this._allFlatData[i];
+                for (var j = 0; j < uniqueDrops.length; j++) {
+                    var currentDrop = uniqueDrops[j];
+                    if ((currentNewInv.CageID + "-" + currentNewInv.Drop) === currentDrop.key) {
+                        currentNewInv.concatPositionInCage = currentDrop.uniquePositions.join(", ");
+                    }
+                }
+            }
+
+            // Step 2: Calculate totalCasenUnits
+            for (var i = 0; i < this._allFlatData.length; i++) {
+                var cases = 0;
+                var units = 0;
+                var total = 0;
+
+                if (this._allFlatData[i].IsCase) {
+                    cases = ((this._allFlatData[i].TotalQuantity - this._allFlatData[i].OpenQuantity) * parseInt(this._allFlatData[i].DenominatorForCase)) % parseInt(this._allFlatData[i].NumeratorForCase);
+                    units = Math.trunc(((this._allFlatData[i].TotalQuantity - this._allFlatData[i].OpenQuantity) * parseInt(this._allFlatData[i].DenominatorForCase)) / parseInt(this._allFlatData[i].NumeratorForCase));
+                    total = cases + units;
+                } else {
+                    total = this._allFlatData[i].TotalQuantity - this._allFlatData[i].OpenQuantity;
+                }
+
+                this._allFlatData[i].totalCasenUnits = total;
+            }
+
+            // Step 3: Calculate TotalPackBoxReq
+            for (var i = 0; i < this._allFlatData.length; i++) {
+                if (this._allFlatData[i].PackBoxVolume && this._allFlatData[i].PackBoxVolume > 0) {
+                    this._allFlatData[i].TotalPackBoxReq = Math.ceil(this._allFlatData[i].Cube / this._allFlatData[i].PackBoxVolume);
+                } else {
+                    this._allFlatData[i].TotalPackBoxReq = 0;
+                }
+            }
+
+            var aFlattenedData = this._allFlatData;
+            //SOM 620 - sort by drop desc
+            aFlattenedData.sort((a, b) => b.Drop - a.Drop);
+
+            var groupedData = {};
+
+            this._allFlatData.forEach(item => {
+                let key = `${item.CageID}_${item.Drop}`;
+                if (!groupedData[key]) {
+                    groupedData[key] = {
+                        CageID: item.CageID,
+                        Drop: item.Drop,
+                        totalCasenUnits: 0,
+                        allMoved: true, // CHANGED: group-level moved flag
+                        items: []
+                    };
+                }
+                groupedData[key].items.push(item);
+                groupedData[key].totalCasenUnits += item.totalCasenUnits;
+                // CHANGED: stays true only if every item in this Cage + Drop is moved
+                groupedData[key].allMoved = groupedData[key].allMoved && item.alreadyMoved === true;
+            });
+
+            // Convert groupedData to array
+            var groupedResult = Object.values(groupedData);
+
+            const groupedMap = new Map();
+
+            // Step 1: Group by CageID
+            groupedResult.forEach(entry => {
+                const cageId = entry.CageID;
+
+                if (!groupedMap.has(cageId)) {
+                    groupedMap.set(cageId, []);
+                }
+
+                groupedMap.get(cageId).push(entry);
+            });
+
+            // Step 2: Sort each Cage group by Drop (descending)
+            const result = [];
+
+            groupedMap.forEach((entries, cageId) => {
+                const sortedEntries = entries.sort((a, b) => b.Drop - a.Drop);
+
+                // Step 3: Push back into final array (same structure)
+                sortedEntries.forEach(entry => {
+                    result.push({
+                        CageID: entry.CageID,
+                        Drop: entry.Drop,
+                        totalCasenUnits: entry.totalCasenUnits,
+                        allMoved: entry.allMoved, // CHANGED: carry flag through
+                        items: entry.items.map(item => ({
+                            ...item // preserve ALL item properties
+                        }))
+                    });
+                });
+            });
+
+            console.log(result);
+
+            for (var i = 0; i < result.length; i++) {
+                var currentDropItems = result[i];
+                for (var j = 0; j < currentDropItems.items.length; j++) {
+
+                    if (j === 0) {
+                        currentDropItems.items[0].concatPositionInCage = currentDropItems.items[0].PositionInCage;
+                        currentDropItems.items[0].sumTotalPackBoxReq = currentDropItems.items[0].TotalPackBoxReq;
+                    }
+
+                    if (currentDropItems.Drop === currentDropItems.items[j].Drop && j > 0) {
+                        if (!(currentDropItems.items[0].concatPositionInCage).toString().includes(currentDropItems.items[j].PositionInCage.toString())) {
+                            currentDropItems.items[0].concatPositionInCage = currentDropItems.items[0].concatPositionInCage + ", " + currentDropItems.items[j].PositionInCage;
+                        }
+                        currentDropItems.items[0].sumTotalPackBoxReq = currentDropItems.items[0].sumTotalPackBoxReq + currentDropItems.items[j].TotalPackBoxReq;
+                    }
+
+                }
+            }
+
+            var filteredItems = [];
+            for (var i = 0; i < result.length; i++) {
+                var oSummary = result[i].items[0];
+                oSummary.FinalTotal = result[i].totalCasenUnits;
+                // CHANGED: Status reflects the whole drop, not just the first item
+                oSummary.alreadyMoved = result[i].allMoved;
+                oSummary.Status = result[i].allMoved ? "Success" : "None";
+                filteredItems.push(oSummary);
+            }
+
+            var aFlattenedData = filteredItems;
+            //SOM 620 - sort by drop desc
+            aFlattenedData.sort((a, b) => b.Drop - a.Drop);
+
+            var oFlatModel = new sap.ui.model.json.JSONModel({ results: aFlattenedData });
+            this.getView().setModel(oFlatModel, "flattened");
+            this._allData = aFlattenedData;
+            //this._updatePagedData();
+            for (let i = 0; i < this._allData.length; i++) {
+                this.confirmItemMovement(this._allData[i]);
+            }
+            
+        },
+        // ** End **
+
         updatePagedData: function () {
             var start = this._currentIndex * this._pageSize;
             var end = start + this._pageSize;
@@ -370,6 +628,8 @@ sap.ui.define([
                     "CurrentRouteData"
                 );
 
+                this._createDynamicTable1();
+
                 this.getOwnerComponent().getRouter().navTo("CageDetails");
 
             } else {
@@ -427,6 +687,58 @@ sap.ui.define([
                 });
             });
         },
+
+        /*
+        getCageDetailsForMove: async function (taskID) {
+                var that = this;
+                var sDest = "/palletiseservices";
+                var sUrl = this.appModulePath + sDest + "/Palletise/getCagesDetailToPalletise";
+                var oLocale = sap.ui.getCore().getConfiguration().getLocale();
+                var lang = oLocale.language;
+                var taskIDs = [];
+                for (var i = 0; i < this.getOwnerComponent().getModel("currentRouteCages").getData().length; i++) {
+                    taskIDs.push(this.getOwnerComponent().getModel("currentRouteCages").getData()[i].TASKID)
+                }
+                var oPayload = {
+                    "TaskIDs": taskIDs
+                };
+
+                $.ajax({
+                    url: sUrl,
+                    beforeSend: function (xhr) { xhr.setRequestHeader('Accept-Language', lang); },
+                    method: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(oPayload),  // send JSON as string
+                    headers: {
+                        "Accept": "application/json"
+                    },
+                    success: function (data) {
+                        resolve(data);
+                        //palletisation start
+                        var taskIds = [];
+                        var sCagesData = that.getOwnerComponent().getModel("currentRouteCages").getData();
+                        sCagesData.forEach(function (item) {
+                            var payload = {
+                                "Event_Timestamp": null,
+                                "Event_Type": "PALLETISATION_START",
+                                "ID": "",
+                                "Item_ID": "",
+                                "Level": "H",
+                                "PickTask_ID": item.TASKID,
+                                "Quantity": "0",
+                                "User_ID": null
+                            }
+                            that.palletiseEvt(payload);
+                        });
+                    },
+                    error: function (error) {
+                        reject(error);
+
+                    }
+                });
+            });
+        },
+        */
 
 
         //Barcode Scanner Code 
